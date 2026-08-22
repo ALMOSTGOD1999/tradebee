@@ -1,0 +1,63 @@
+export const roiPlans = [
+  { range: "₹10,000 – ₹1,00,000", capital: "5%", roi: "5%", total: "10%", months: "200%" },
+  { range: "₹1,01,000 – ₹2,50,000", capital: "5%", roi: "6%", total: "11%", months: "220%" },
+  { range: "₹2,51,000 – ₹10,00,000", capital: "5%", roi: "7%", total: "12%", months: "240%" },
+  { range: "₹10,00,000 – ₹25,00,000", capital: "5%", roi: "8%", total: "13%", months: "260%" },
+];
+
+export const levelBonus = [
+  { level: 1, benefit: "2.00%", direct: 1 },
+  { level: 2, benefit: "1.00%", direct: 1 },
+  { level: 3, benefit: "1.00%", direct: 2 },
+  { level: 4, benefit: "1.00%", direct: 3 },
+  { level: 5, benefit: "0.75%", direct: 3 },
+  { level: 6, benefit: "0.50%", direct: 3 },
+  { level: 7, benefit: "0.25%", direct: 4 },
+  { level: 8, benefit: "0.25%", direct: 4 },
+  { level: 9, benefit: "0.25%", direct: 4 },
+  { level: 10, benefit: "0.25%", direct: 4 },
+  { level: 11, benefit: "0.20%", direct: 5 },
+  { level: 12, benefit: "0.20%", direct: 5 },
+  { level: 13, benefit: "0.20%", direct: 5 },
+  { level: 14, benefit: "0.20%", direct: 5 },
+  { level: 15, benefit: "0.20%", direct: 5 },
+  { level: 16, benefit: "0.15%", direct: 6 },
+  { level: 17, benefit: "0.15%", direct: 6 },
+  { level: 18, benefit: "0.15%", direct: 6 },
+  { level: 19, benefit: "0.15%", direct: 6 },
+  { level: 20, benefit: "0.15%", direct: 6 },
+  { level: 21, benefit: "0.15%", direct: 6 },
+];
+
+export const salaryPlan = [
+  { power: "3 Lakh", weak: "2 Lakh", total: "5 Lakh", salary: "₹3,000", totalSalary: "₹36,000" },
+  { power: "6 Lakh", weak: "4 Lakh", total: "10 Lakh", salary: "₹5,000", totalSalary: "₹60,000" },
+  { power: "9 Lakh", weak: "6 Lakh", total: "15 Lakh", salary: "₹10,000", totalSalary: "₹1,20,000" },
+  { power: "15 Lakh", weak: "10 Lakh", total: "25 Lakh", salary: "₹15,000", totalSalary: "₹1,80,000" },
+  { power: "30 Lakh", weak: "20 Lakh", total: "50 Lakh", salary: "₹20,000", totalSalary: "₹2,40,000" },
+  { power: "45 Lakh", weak: "30 Lakh", total: "75 Lakh", salary: "₹40,000", totalSalary: "₹4,80,000" },
+  { power: "60 Lakh", weak: "40 Lakh", total: "1 Crore", salary: "₹50,000", totalSalary: "₹6,00,000" },
+  { power: "90 Lakh", weak: "60 Lakh", total: "1.50 Crore", salary: "₹1,00,000", totalSalary: "₹12,00,000" },
+  { power: "1.20 Crore", weak: "80 Lakh", total: "2 Crore", salary: "₹2,00,000", totalSalary: "₹24,00,000" },
+];
+
+export const rewards = [
+  { total: "5 Lakh", reward: "Training Program or ₹3,000 cash", value: "₹3,000" },
+  { total: "10 Lakh", reward: "3-Day Training Program or ₹3,000 cash", value: "₹8,000" },
+  { total: "15 Lakh", reward: "3D/2N Tour Package or ₹10,000 cash", value: "₹18,000" },
+  { total: "25 Lakh", reward: "5D/4N Tour Package or ₹15,000 cash", value: "₹33,000" },
+  { total: "50 Lakh", reward: "3D/2N Tour with lodging & food or ₹20,000", value: "₹53,000" },
+  { total: "75 Lakh", reward: "Premium Mobile worth ₹40,000", value: "₹93,000" },
+  { total: "1 Crore", reward: "Laptop or ₹50,000", value: "₹1,43,000" },
+  { total: "1.50 Crore", reward: "Motorbike or ₹1,00,000", value: "₹2,43,000" },
+  { total: "2 Crore", reward: "Bullet Motorbike worth ₹2,00,000", value: "₹4,43,000" },
+  { total: "5 Crore", reward: "Alto Car or ₹5,00,000", value: "₹9,43,000" },
+  { total: "10 Crore", reward: "Kia Seltos or ₹10,00,000", value: "₹19,43,000" },
+  { total: "20 Crore", reward: "Thar 1st Model or ₹20,00,000", value: "₹39,43,000" },
+  { total: "50 Crore", reward: "Fortuner or ₹50,00,000", value: "₹89,43,000" },
+  { total: "100 Crore", reward: "Range Rover 1st Model or ₹1,00,00,000", value: "₹1,89,43,000" },
+  { total: "200 Crore", reward: "BMW M4 1st Model or ₹2,00,00,000", value: "₹3,89,43,000" },
+  { total: "500 Crore", reward: "Mercedes Maybach SL680 + Villa", value: "₹8,89,43,000" },
+  { total: "1000 Crore", reward: "Helicopter + 2000 sq.ft. Villa", value: "₹18,89,43,000" },
+  { total: "5000 Crore", reward: "5-Seater Plane + 5000 sq.ft. Villa", value: "₹68,89,43,000" },
+];
