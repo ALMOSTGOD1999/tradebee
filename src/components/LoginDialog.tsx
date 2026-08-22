@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "@tanstack/react-router";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
@@ -28,6 +29,8 @@ export function LoginDialog({
   defaultTab = "login",
   referralId,
 }: LoginDialogProps) {
+  const navigate = useNavigate();
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md p-0 gap-0 overflow-hidden">
@@ -60,6 +63,7 @@ export function LoginDialog({
                 onSuccess={(user) => {
                   onOpenChange(false);
                   onSuccess(user);
+                  navigate({ to: "/dashboard" });
                 }}
               />
             </TabsContent>
@@ -69,6 +73,7 @@ export function LoginDialog({
                 onSuccess={(user) => {
                   onOpenChange(false);
                   onSuccess(user);
+                  navigate({ to: "/dashboard" });
                 }}
               />
             </TabsContent>
