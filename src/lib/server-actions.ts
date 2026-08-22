@@ -103,6 +103,20 @@ export const initializeDB = createServerFn({ method: "POST" }).handler(
 export const loginUser = createServerFn({ method: "POST" })
   .validator((data: { email: string; password: string }) => data)
   .handler(async ({ data }) => {
+    // Auto-seed admin if no users exist
+    const userCount = await db.select({ count: sql<number>`count(*)` }).from(users);
+    if (userCount[0]?.count === 0) {
+      await db.insert(users).values({
+        id: "TB000001",
+        parentId: null,
+        name: "Admin",
+        email: "admin@tradebee.in",
+        phone: "0000000000",
+        password: hashPassword("Tradebee@202610"),
+        role: "admin",
+      });
+    }
+
     const result = await db
       .select()
       .from(users)
