@@ -103,10 +103,10 @@ export const initializeDB = createServerFn({ method: "POST" }).handler(
 export const loginUser = createServerFn({ method: "POST" })
   .validator((data: { email: string; password: string }) => data)
   .handler(async ({ data }) => {
+    // Auto-seed admin if no users exist
     try {
-      // Auto-seed admin if no users exist
-      const userCount = await db.select({ count: sql<number>`count(*)` }).from(users);
-      if (userCount[0]?.count === 0) {
+      const allUsers = await db.select().from(users);
+      if (allUsers.length === 0) {
         await db.insert(users).values({
           id: "TB000001",
           parentId: null,
@@ -117,26 +117,34 @@ export const loginUser = createServerFn({ method: "POST" })
           role: "admin",
         });
       }
+    } catch (e) {
+      console.error("Seed error:", e);
+    }
 
-      const result = await db
+    // Try email first, then ID
+    let result = await db
+      .select()
+      .from(users)
+      .where(eq(users.email, data.email));
+
+    if (result.length === 0) {
+      result = await db
         .select()
         .from(users)
-        .where(or(eq(users.email, data.email), eq(users.id, data.email)));
-      const user = result[0];
-      if (!user) {
-        return { success: false, message: "Invalid email/ID or password" };
-      }
-      if (!verifyPassword(data.password, user.password)) {
-        return { success: false, message: "Invalid email/ID or password" };
-      }
-      if (!user.isActive) {
-        return { success: false, message: "Account has been deactivated" };
-      }
-      return { success: true, user, message: "Login successful" };
-    } catch (error) {
-      console.error("Login error:", error);
-      return { success: false, message: "Database error: " + (error instanceof Error ? error.message : String(error)) };
+        .where(eq(users.id, data.email));
     }
+
+    const user = result[0];
+    if (!user) {
+      return { success: false, message: "User not found" };
+    }
+    if (!verifyPassword(data.password, user.password)) {
+      return { success: false, message: "Wrong password" };
+    }
+    if (!user.isActive) {
+      return { success: false, message: "Account has been deactivated" };
+    }
+    return { success: true, user, message: "Login successful" };
   });
 
 export const signupUser = createServerFn({ method: "POST" })
