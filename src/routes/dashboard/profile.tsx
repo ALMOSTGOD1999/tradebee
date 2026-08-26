@@ -181,6 +181,45 @@ function ProfilePage() {
           </div>
         </CardContent>
       </Card>
+
+      {/* KYC Details */}
+      <Card className="animate-fade-in-up stagger-4 border-0 shadow-lg bg-white overflow-hidden">
+        <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-blue-400 to-indigo-500" />
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center">
+              <Shield className="h-4 w-4 text-blue-600" />
+            </div>
+            <span className="text-stone-800">KYC / Bank Details</span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <p className="text-sm text-stone-500">Fill in your bank and identity details for payouts.</p>
+          <div className="grid gap-4">
+            <div className="grid gap-2">
+              <Label htmlFor="ifscCode" className="text-sm font-medium text-stone-600">IFSC Code</Label>
+              <Input id="ifscCode" placeholder="e.g. SBIN0001234" value={ifscCode} onChange={(e) => setIfscCode(e.target.value.toUpperCase())} className="bg-stone-50 border-stone-200" />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="accountNo" className="text-sm font-medium text-stone-600">Account Number</Label>
+              <Input id="accountNo" placeholder="Bank account number" value={accountNo} onChange={(e) => setAccountNo(e.target.value)} className="bg-stone-50 border-stone-200" />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="grid gap-2">
+                <Label htmlFor="panNo" className="text-sm font-medium text-stone-600">PAN Number</Label>
+                <Input id="panNo" placeholder="e.g. ABCDE1234F" value={panNo} onChange={(e) => setPanNo(e.target.value.toUpperCase())} className="bg-stone-50 border-stone-200" />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="branchName" className="text-sm font-medium text-stone-600">Branch Name</Label>
+                <Input id="branchName" placeholder="Bank branch" value={branchName} onChange={(e) => setBranchName(e.target.value)} className="bg-stone-50 border-stone-200" />
+              </div>
+            </div>
+          </div>
+          <Button onClick={saveKYC} disabled={kycSaving} className="w-full bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white">
+            {kycSaving ? <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> Saving...</> : "Save KYC Details"}
+          </Button>
+        </CardContent>
+      </Card>
     </div>
   );
 }

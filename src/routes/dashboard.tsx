@@ -15,6 +15,7 @@ import {
   Shield,
   User,
   Hexagon,
+  UserPlus,
 } from "lucide-react";
 import { cn } from "../lib/utils";
 
@@ -25,6 +26,7 @@ export const Route = createFileRoute("/dashboard")({
 const navItems = [
   { to: "/dashboard" as const, label: "Dashboard", icon: LayoutDashboard },
   { to: "/dashboard/profile" as const, label: "Profile", icon: User },
+  { to: "/dashboard/add-user" as const, label: "Add User", icon: UserPlus },
   { to: "/dashboard/genealogy" as const, label: "Genealogy", icon: TreePine },
   { to: "/dashboard/investment" as const, label: "Investment", icon: Wallet },
   { to: "/dashboard/referrals" as const, label: "Referrals", icon: Link2 },

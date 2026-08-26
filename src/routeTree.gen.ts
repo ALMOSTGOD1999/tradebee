@@ -17,6 +17,7 @@ import { Route as IncomeRouteImport } from './routes/income'
 import { Route as PlansRouteImport } from './routes/plans'
 import { Route as RewardsRouteImport } from './routes/rewards'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
+import { Route as DashboardAddUserRouteImport } from './routes/dashboard/add-user'
 import { Route as DashboardGenealogyRouteImport } from './routes/dashboard/genealogy'
 import { Route as DashboardInvestmentRouteImport } from './routes/dashboard/investment'
 import { Route as DashboardProfileRouteImport } from './routes/dashboard/profile'
@@ -65,6 +66,11 @@ const DashboardIndexRoute = DashboardIndexRouteImport.update({
   path: '/',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardAddUserRoute = DashboardAddUserRouteImport.update({
+  id: '/add-user',
+  path: '/add-user',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const DashboardGenealogyRoute = DashboardGenealogyRouteImport.update({
   id: '/genealogy',
   path: '/genealogy',
@@ -110,6 +116,7 @@ export interface FileRoutesByFullPath {
   '/income': typeof IncomeRoute
   '/plans': typeof PlansRoute
   '/rewards': typeof RewardsRoute
+  '/dashboard/add-user': typeof DashboardAddUserRoute
   '/dashboard/genealogy': typeof DashboardGenealogyRoute
   '/dashboard/investment': typeof DashboardInvestmentRoute
   '/dashboard/profile': typeof DashboardProfileRoute
@@ -126,6 +133,7 @@ export interface FileRoutesByTo {
   '/income': typeof IncomeRoute
   '/plans': typeof PlansRoute
   '/rewards': typeof RewardsRoute
+  '/dashboard/add-user': typeof DashboardAddUserRoute
   '/dashboard/genealogy': typeof DashboardGenealogyRoute
   '/dashboard/investment': typeof DashboardInvestmentRoute
   '/dashboard/profile': typeof DashboardProfileRoute
@@ -144,6 +152,7 @@ export interface FileRoutesById {
   '/income': typeof IncomeRoute
   '/plans': typeof PlansRoute
   '/rewards': typeof RewardsRoute
+  '/dashboard/add-user': typeof DashboardAddUserRoute
   '/dashboard/genealogy': typeof DashboardGenealogyRoute
   '/dashboard/investment': typeof DashboardInvestmentRoute
   '/dashboard/profile': typeof DashboardProfileRoute
@@ -163,6 +172,7 @@ export interface FileRouteTypes {
     | '/income'
     | '/plans'
     | '/rewards'
+    | '/dashboard/add-user'
     | '/dashboard/genealogy'
     | '/dashboard/investment'
     | '/dashboard/profile'
@@ -179,6 +189,7 @@ export interface FileRouteTypes {
     | '/income'
     | '/plans'
     | '/rewards'
+    | '/dashboard/add-user'
     | '/dashboard/genealogy'
     | '/dashboard/investment'
     | '/dashboard/profile'
@@ -196,6 +207,7 @@ export interface FileRouteTypes {
     | '/income'
     | '/plans'
     | '/rewards'
+    | '/dashboard/add-user'
     | '/dashboard/genealogy'
     | '/dashboard/investment'
     | '/dashboard/profile'
@@ -274,6 +286,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardIndexRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/add-user': {
+      id: '/dashboard/add-user'
+      path: '/add-user'
+      fullPath: '/dashboard/add-user'
+      preLoaderRoute: typeof DashboardAddUserRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/dashboard/genealogy': {
       id: '/dashboard/genealogy'
       path: '/genealogy'
@@ -327,6 +346,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface DashboardRouteChildren {
+  DashboardAddUserRoute: typeof DashboardAddUserRoute
   DashboardGenealogyRoute: typeof DashboardGenealogyRoute
   DashboardInvestmentRoute: typeof DashboardInvestmentRoute
   DashboardProfileRoute: typeof DashboardProfileRoute
@@ -338,6 +358,7 @@ interface DashboardRouteChildren {
 }
 
 const DashboardRouteChildren: DashboardRouteChildren = {
+  DashboardAddUserRoute: DashboardAddUserRoute,
   DashboardGenealogyRoute: DashboardGenealogyRoute,
   DashboardInvestmentRoute: DashboardInvestmentRoute,
   DashboardProfileRoute: DashboardProfileRoute,
