@@ -4,6 +4,7 @@ import { useAuth } from "../../lib/auth";
 import { signupUser } from "../../lib/server-actions";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../../components/ui/card";
 import { Input } from "../../components/ui/input";
+import { PasswordInput } from "../../components/ui/password-input";
 import { Label } from "../../components/ui/label";
 import { Button } from "../../components/ui/button";
 import { toast } from "sonner";
@@ -148,7 +149,7 @@ function AddUserPage() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="user-password">Password</Label>
-              <Input id="user-password" type="password" placeholder="Set password (min 6 chars)" value={password} onChange={(e) => setPassword(e.target.value)} required className="h-11" />
+              <PasswordInput id="user-password" placeholder="Set password (min 6 chars)" value={password} onChange={(e) => setPassword(e.target.value)} required className="h-11" />
             </div>
 
             <div className="pt-2 border-t border-stone-100">

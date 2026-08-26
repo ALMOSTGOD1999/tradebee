@@ -588,6 +588,43 @@ export const changePassword = createServerFn({ method: "POST" })
     return { success: true, message: "Password changed successfully" };
   });
 
+export const adminChangePassword = createServerFn({ method: "POST" })
+  .validator(
+    (data: { adminId: string; targetUserId: string; newPassword: string }) =>
+      data
+  )
+  .handler(async ({ data }) => {
+    const [admin] = await db
+      .select()
+      .from(users)
+      .where(eq(users.id, data.adminId));
+    if (!admin || admin.role !== "admin") {
+      return { success: false, message: "Unauthorized" };
+    }
+
+    const [target] = await db
+      .select()
+      .from(users)
+      .where(eq(users.id, data.targetUserId));
+    if (!target) {
+      return { success: false, message: "User not found" };
+    }
+
+    if (data.newPassword.length < 6) {
+      return {
+        success: false,
+        message: "New password must be at least 6 characters",
+      };
+    }
+
+    await db
+      .update(users)
+      .set({ password: hashPassword(data.newPassword) })
+      .where(eq(users.id, data.targetUserId));
+
+    return { success: true, message: "Password reset successfully" };
+  });
+
 // ─── Investment ─────────────────────────────────────────────────────────────
 
 export const updateUserInvestment = createServerFn({ method: "POST" })

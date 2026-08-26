@@ -1,14 +1,15 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { useAuth } from "../../../../lib/auth";
-import { getUser, adminUpdateUser } from "../../../../lib/server-actions";
+import { getUser, adminUpdateUser, adminChangePassword } from "../../../../lib/server-actions";
 import { Card, CardContent, CardHeader, CardTitle } from "../../../../components/ui/card";
 import { Input } from "../../../../components/ui/input";
+import { PasswordInput } from "../../../../components/ui/password-input";
 import { Label } from "../../../../components/ui/label";
 import { Button } from "../../../../components/ui/button";
 import { Badge } from "../../../../components/ui/badge";
 import { toast } from "sonner";
-import { Save, ArrowLeft, Loader2, UserCog } from "lucide-react";
+import { Save, ArrowLeft, Loader2, UserCog, Lock } from "lucide-react";
 
 export const Route = createFileRoute("/dashboard/admin/edit-user/$userId")({
   component: AdminEditUserPage,
@@ -35,6 +36,11 @@ function AdminEditUserPage() {
   const [accountNo, setAccountNo] = useState("");
   const [panNo, setPanNo] = useState("");
   const [branchName, setBranchName] = useState("");
+
+  // Admin password reset
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordSaving, setPasswordSaving] = useState(false);
 
   useEffect(() => {
     if (!user || user.role !== "admin") return;
@@ -89,6 +95,35 @@ function AdminEditUserPage() {
       toast.error("Failed to update user");
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handlePasswordReset = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (newPassword !== confirmPassword) {
+      toast.error("Passwords don't match");
+      return;
+    }
+    if (newPassword.length < 6) {
+      toast.error("Password must be at least 6 characters");
+      return;
+    }
+    setPasswordSaving(true);
+    try {
+      const result = await adminChangePassword({
+        data: { adminId: user.id, targetUserId: userId, newPassword },
+      });
+      if (result.success) {
+        toast.success("Password reset successfully!");
+        setNewPassword("");
+        setConfirmPassword("");
+      } else {
+        toast.error(result.message);
+      }
+    } catch {
+      toast.error("Failed to reset password");
+    } finally {
+      setPasswordSaving(false);
     }
   };
 
@@ -208,6 +243,29 @@ function AdminEditUserPage() {
                 <Input id="edit-branch" value={branchName} onChange={(e) => setBranchName(e.target.value)} placeholder="Bank branch" className="h-11" />
               </div>
             </div>
+          </CardContent>
+        </Card>
+
+        {/* Password Reset */}
+        <Card className="animate-fade-in-up stagger-3 border-0 shadow-md bg-white/80 backdrop-blur-sm">
+          <CardHeader>
+            <CardTitle className="text-base flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-rose-500" />
+              Reset Password
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="admin-new-password">New Password</Label>
+              <PasswordInput id="admin-new-password" placeholder="Min 6 characters" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} className="h-11" />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="admin-confirm-password">Confirm Password</Label>
+              <PasswordInput id="admin-confirm-password" placeholder="Re-enter new password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} className="h-11" />
+            </div>
+            <Button type="button" onClick={handlePasswordReset} disabled={passwordSaving} variant="outline" className="w-full border-rose-200 text-rose-600 hover:bg-rose-50 hover:border-rose-300">
+              {passwordSaving ? <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> Resetting...</> : <><Lock className="h-4 w-4 mr-2" /> Reset Password</>}
+            </Button>
           </CardContent>
         </Card>
 

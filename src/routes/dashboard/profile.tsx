@@ -4,12 +4,13 @@ import { useAuth } from "../../lib/auth";
 import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
 import { Badge } from "../../components/ui/badge";
 import { Input } from "../../components/ui/input";
+import { PasswordInput } from "../../components/ui/password-input";
 import { Label } from "../../components/ui/label";
 import { Button } from "../../components/ui/button";
 import { getInvestmentTier } from "../../lib/store";
-import { getUser, updateUserKYC } from "../../lib/server-actions";
+import { getUser, updateUserKYC, changePassword } from "../../lib/server-actions";
 import type { User } from "../../lib/store";
-import { Copy, Check, TrendingUp, Link2, Mail, Phone, Calendar, Users, Shield, Loader2 } from "lucide-react";
+import { Copy, Check, TrendingUp, Link2, Mail, Phone, Calendar, Users, Shield, Loader2, Lock } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/dashboard/profile")({
@@ -31,6 +32,12 @@ function ProfilePage() {
   const [panNo, setPanNo] = useState(user?.panNo || "");
   const [branchName, setBranchName] = useState(user?.branchName || "");
   const [kycSaving, setKycSaving] = useState(false);
+
+  // Change password state
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordSaving, setPasswordSaving] = useState(false);
 
   useEffect(() => {
     if (user?.parentId) {
@@ -83,6 +90,36 @@ function ProfilePage() {
       toast.error("Failed to save KYC details");
     } finally {
       setKycSaving(false);
+    }
+  };
+
+  const handleChangePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (newPassword !== confirmPassword) {
+      toast.error("New passwords don't match");
+      return;
+    }
+    if (newPassword.length < 6) {
+      toast.error("Password must be at least 6 characters");
+      return;
+    }
+    setPasswordSaving(true);
+    try {
+      const result = await changePassword({
+        data: { userId: user.id, currentPassword, newPassword },
+      });
+      if (result.success) {
+        toast.success("Password changed successfully!");
+        setCurrentPassword("");
+        setNewPassword("");
+        setConfirmPassword("");
+      } else {
+        toast.error(result.message);
+      }
+    } catch {
+      toast.error("Failed to change password");
+    } finally {
+      setPasswordSaving(false);
     }
   };
 
@@ -218,6 +255,38 @@ function ProfilePage() {
           <Button onClick={saveKYC} disabled={kycSaving} className="w-full bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white">
             {kycSaving ? <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> Saving...</> : "Save KYC Details"}
           </Button>
+        </CardContent>
+      </Card>
+
+      {/* Change Password */}
+      <Card className="animate-fade-in-up stagger-5 border-0 shadow-lg bg-white overflow-hidden">
+        <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-rose-400 to-pink-500" />
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-lg bg-rose-100 flex items-center justify-center">
+              <Lock className="h-4 w-4 text-rose-600" />
+            </div>
+            <span className="text-stone-800">Change Password</span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleChangePassword} className="space-y-4">
+            <div className="grid gap-2">
+              <Label htmlFor="currentPassword" className="text-sm font-medium text-stone-600">Current Password</Label>
+              <PasswordInput id="currentPassword" placeholder="Enter current password" value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} required className="bg-stone-50 border-stone-200" />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="newPassword" className="text-sm font-medium text-stone-600">New Password</Label>
+              <PasswordInput id="newPassword" placeholder="Min 6 characters" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} required className="bg-stone-50 border-stone-200" />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="confirmPassword" className="text-sm font-medium text-stone-600">Confirm New Password</Label>
+              <PasswordInput id="confirmPassword" placeholder="Re-enter new password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required className="bg-stone-50 border-stone-200" />
+            </div>
+            <Button type="submit" disabled={passwordSaving} className="w-full bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white">
+              {passwordSaving ? <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> Changing...</> : "Change Password"}
+            </Button>
+          </form>
         </CardContent>
       </Card>
     </div>

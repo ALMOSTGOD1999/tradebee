@@ -4,6 +4,7 @@ import { useAuth } from "../../../lib/auth";
 import { adminCreateUser } from "../../../lib/server-actions";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../../../components/ui/card";
 import { Input } from "../../../components/ui/input";
+import { PasswordInput } from "../../../components/ui/password-input";
 import { Label } from "../../../components/ui/label";
 import { toast } from "sonner";
 import { UserPlus } from "lucide-react";
@@ -72,7 +73,7 @@ function AdminCreateUserPage() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="user-password">Password</Label>
-              <Input id="user-password" type="password" placeholder="Set password" value={password} onChange={(e) => setPassword(e.target.value)} required className="h-11" />
+              <PasswordInput id="user-password" placeholder="Set password" value={password} onChange={(e) => setPassword(e.target.value)} required className="h-11" />
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-2">
