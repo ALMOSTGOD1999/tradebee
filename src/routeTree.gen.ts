@@ -20,6 +20,7 @@ import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
 import { Route as DashboardAddUserRouteImport } from './routes/dashboard/add-user'
 import { Route as DashboardGenealogyRouteImport } from './routes/dashboard/genealogy'
 import { Route as DashboardInvestmentRouteImport } from './routes/dashboard/investment'
+import { Route as DashboardLevelsRouteImport } from './routes/dashboard/levels'
 import { Route as DashboardProfileRouteImport } from './routes/dashboard/profile'
 import { Route as DashboardReferralsRouteImport } from './routes/dashboard/referrals'
 import { Route as DashboardTeamRouteImport } from './routes/dashboard/team'
@@ -82,6 +83,11 @@ const DashboardInvestmentRoute = DashboardInvestmentRouteImport.update({
   path: '/investment',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardLevelsRoute = DashboardLevelsRouteImport.update({
+  id: '/levels',
+  path: '/levels',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const DashboardProfileRoute = DashboardProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
@@ -126,6 +132,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/add-user': typeof DashboardAddUserRoute
   '/dashboard/genealogy': typeof DashboardGenealogyRoute
   '/dashboard/investment': typeof DashboardInvestmentRoute
+  '/dashboard/levels': typeof DashboardLevelsRoute
   '/dashboard/profile': typeof DashboardProfileRoute
   '/dashboard/referrals': typeof DashboardReferralsRoute
   '/dashboard/team': typeof DashboardTeamRoute
@@ -144,6 +151,7 @@ export interface FileRoutesByTo {
   '/dashboard/add-user': typeof DashboardAddUserRoute
   '/dashboard/genealogy': typeof DashboardGenealogyRoute
   '/dashboard/investment': typeof DashboardInvestmentRoute
+  '/dashboard/levels': typeof DashboardLevelsRoute
   '/dashboard/profile': typeof DashboardProfileRoute
   '/dashboard/referrals': typeof DashboardReferralsRoute
   '/dashboard/team': typeof DashboardTeamRoute
@@ -164,6 +172,7 @@ export interface FileRoutesById {
   '/dashboard/add-user': typeof DashboardAddUserRoute
   '/dashboard/genealogy': typeof DashboardGenealogyRoute
   '/dashboard/investment': typeof DashboardInvestmentRoute
+  '/dashboard/levels': typeof DashboardLevelsRoute
   '/dashboard/profile': typeof DashboardProfileRoute
   '/dashboard/referrals': typeof DashboardReferralsRoute
   '/dashboard/team': typeof DashboardTeamRoute
@@ -185,6 +194,7 @@ export interface FileRouteTypes {
     | '/dashboard/add-user'
     | '/dashboard/genealogy'
     | '/dashboard/investment'
+    | '/dashboard/levels'
     | '/dashboard/profile'
     | '/dashboard/referrals'
     | '/dashboard/team'
@@ -203,6 +213,7 @@ export interface FileRouteTypes {
     | '/dashboard/add-user'
     | '/dashboard/genealogy'
     | '/dashboard/investment'
+    | '/dashboard/levels'
     | '/dashboard/profile'
     | '/dashboard/referrals'
     | '/dashboard/team'
@@ -222,6 +233,7 @@ export interface FileRouteTypes {
     | '/dashboard/add-user'
     | '/dashboard/genealogy'
     | '/dashboard/investment'
+    | '/dashboard/levels'
     | '/dashboard/profile'
     | '/dashboard/referrals'
     | '/dashboard/team'
@@ -320,6 +332,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardInvestmentRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/levels': {
+      id: '/dashboard/levels'
+      path: '/levels'
+      fullPath: '/dashboard/levels'
+      preLoaderRoute: typeof DashboardLevelsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/dashboard/profile': {
       id: '/dashboard/profile'
       path: '/profile'
@@ -369,6 +388,7 @@ interface DashboardRouteChildren {
   DashboardAddUserRoute: typeof DashboardAddUserRoute
   DashboardGenealogyRoute: typeof DashboardGenealogyRoute
   DashboardInvestmentRoute: typeof DashboardInvestmentRoute
+  DashboardLevelsRoute: typeof DashboardLevelsRoute
   DashboardProfileRoute: typeof DashboardProfileRoute
   DashboardReferralsRoute: typeof DashboardReferralsRoute
   DashboardTeamRoute: typeof DashboardTeamRoute
@@ -382,6 +402,7 @@ const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardAddUserRoute: DashboardAddUserRoute,
   DashboardGenealogyRoute: DashboardGenealogyRoute,
   DashboardInvestmentRoute: DashboardInvestmentRoute,
+  DashboardLevelsRoute: DashboardLevelsRoute,
   DashboardProfileRoute: DashboardProfileRoute,
   DashboardReferralsRoute: DashboardReferralsRoute,
   DashboardTeamRoute: DashboardTeamRoute,

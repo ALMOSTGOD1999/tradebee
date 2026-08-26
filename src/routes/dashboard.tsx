@@ -16,6 +16,7 @@ import {
   User,
   Hexagon,
   UserPlus,
+  Layers,
 } from "lucide-react";
 import { cn } from "../lib/utils";
 
@@ -28,6 +29,7 @@ const navItems = [
   { to: "/dashboard/profile" as const, label: "Profile", icon: User },
   { to: "/dashboard/add-user" as const, label: "Add User", icon: UserPlus },
   { to: "/dashboard/genealogy" as const, label: "Genealogy", icon: TreePine },
+  { to: "/dashboard/levels" as const, label: "Levels", icon: Layers },
   { to: "/dashboard/investment" as const, label: "Investment", icon: Wallet },
   { to: "/dashboard/referrals" as const, label: "Referrals", icon: Link2 },
   { to: "/dashboard/team" as const, label: "My Team", icon: Users },

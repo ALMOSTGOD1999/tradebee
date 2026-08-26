@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
+import { PasswordInput } from "./ui/password-input";
 import { Label } from "./ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import {
@@ -124,9 +125,8 @@ function LoginForm({ onSuccess }: { onSuccess: (user: any) => void }) {
       </div>
       <div className="space-y-2">
         <Label htmlFor="dialog-login-password">Password</Label>
-        <Input
+        <PasswordInput
           id="dialog-login-password"
-          type="password"
           placeholder="Enter your password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
@@ -237,9 +237,8 @@ function SignupForm({
       </div>
       <div className="space-y-1.5">
         <Label htmlFor="dialog-signup-password">Password</Label>
-        <Input
+        <PasswordInput
           id="dialog-signup-password"
-          type="password"
           placeholder="Create password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
