@@ -19,6 +19,10 @@ function AdminCreateUserPage() {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [parentId, setParentId] = useState("TB000001");
+  const [ifscCode, setIfscCode] = useState("");
+  const [accountNo, setAccountNo] = useState("");
+  const [panNo, setPanNo] = useState("");
+  const [branchName, setBranchName] = useState("");
   const [loading, setLoading] = useState(false);
 
   if (!user || user.role !== "admin") return null;
@@ -26,10 +30,10 @@ function AdminCreateUserPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    const result = await adminCreateUser({ data: { name, email, phone, password, parentId } });
+    const result = await adminCreateUser({ data: { name, email, phone, password, parentId, ifscCode, accountNo, panNo, branchName } });
     if (result.success && result.user) {
       toast.success(`User created! ID: ${result.user.id}`);
-      setName(""); setEmail(""); setPhone(""); setPassword("");
+      setName(""); setEmail(""); setPhone(""); setPassword(""); setIfscCode(""); setAccountNo(""); setPanNo(""); setBranchName("");
     } else {
       toast.error(result.message);
     }
@@ -69,6 +73,26 @@ function AdminCreateUserPage() {
             <div className="space-y-2">
               <Label htmlFor="user-password">Password</Label>
               <Input id="user-password" type="password" placeholder="Set password" value={password} onChange={(e) => setPassword(e.target.value)} required className="h-11" />
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-2">
+                <Label htmlFor="user-ifsc">IFSC Code</Label>
+                <Input id="user-ifsc" placeholder="e.g. SBIN0001234" value={ifscCode} onChange={(e) => setIfscCode(e.target.value)} className="h-11" />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="user-branch">Branch Name</Label>
+                <Input id="user-branch" placeholder="e.g. Andheri West" value={branchName} onChange={(e) => setBranchName(e.target.value)} className="h-11" />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-2">
+                <Label htmlFor="user-account">Account No</Label>
+                <Input id="user-account" placeholder="Bank account number" value={accountNo} onChange={(e) => setAccountNo(e.target.value)} className="h-11" />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="user-pan">PAN No</Label>
+                <Input id="user-pan" placeholder="e.g. ABCDE1234F" value={panNo} onChange={(e) => setPanNo(e.target.value)} className="h-11" />
+              </div>
             </div>
             <button type="submit" disabled={loading} className="w-full h-11 gradient-amber text-white rounded-xl text-sm font-semibold shadow-amber hover:shadow-lg-amber transition-all duration-300 disabled:opacity-50">
               {loading ? "Creating..." : "Create User"}

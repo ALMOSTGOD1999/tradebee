@@ -162,6 +162,10 @@ function SignupForm({
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [refId, setRefId] = useState(referralId || "");
+  const [ifscCode, setIfscCode] = useState("");
+  const [accountNo, setAccountNo] = useState("");
+  const [panNo, setPanNo] = useState("");
+  const [branchName, setBranchName] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -180,7 +184,7 @@ function SignupForm({
     }
     try {
       const result = await signupUser({
-        data: { name, email, phone, password, parentId: refId },
+        data: { name, email, phone, password, parentId: refId, ifscCode, accountNo, panNo, branchName },
       });
       if (result.success && result.user) {
         toast.success("Account created! You can now login.");
@@ -253,6 +257,50 @@ function SignupForm({
           required
           className="h-10"
         />
+      </div>
+      <div className="grid grid-cols-2 gap-3">
+        <div className="space-y-1.5">
+          <Label htmlFor="dialog-signup-ifsc">IFSC Code</Label>
+          <Input
+            id="dialog-signup-ifsc"
+            placeholder="e.g. SBIN0001234"
+            value={ifscCode}
+            onChange={(e) => setIfscCode(e.target.value)}
+            className="h-10"
+          />
+        </div>
+        <div className="space-y-1.5">
+          <Label htmlFor="dialog-signup-branch">Branch Name</Label>
+          <Input
+            id="dialog-signup-branch"
+            placeholder="e.g. Andheri West"
+            value={branchName}
+            onChange={(e) => setBranchName(e.target.value)}
+            className="h-10"
+          />
+        </div>
+      </div>
+      <div className="grid grid-cols-2 gap-3">
+        <div className="space-y-1.5">
+          <Label htmlFor="dialog-signup-account">Account No</Label>
+          <Input
+            id="dialog-signup-account"
+            placeholder="Bank account number"
+            value={accountNo}
+            onChange={(e) => setAccountNo(e.target.value)}
+            className="h-10"
+          />
+        </div>
+        <div className="space-y-1.5">
+          <Label htmlFor="dialog-signup-pan">PAN No</Label>
+          <Input
+            id="dialog-signup-pan"
+            placeholder="e.g. ABCDE1234F"
+            value={panNo}
+            onChange={(e) => setPanNo(e.target.value)}
+            className="h-10"
+          />
+        </div>
       </div>
       {error && (
         <p className="text-sm text-destructive bg-destructive/10 p-2 rounded">

@@ -155,6 +155,10 @@ export const signupUser = createServerFn({ method: "POST" })
       phone: string;
       password: string;
       parentId: string;
+      ifscCode?: string;
+      accountNo?: string;
+      panNo?: string;
+      branchName?: string;
     }) => data
   )
   .handler(async ({ data }) => {
@@ -190,6 +194,10 @@ export const signupUser = createServerFn({ method: "POST" })
       phone: data.phone,
       password: hashPassword(data.password),
       role: "user" as const,
+      ifscCode: data.ifscCode || null,
+      accountNo: data.accountNo || null,
+      panNo: data.panNo || null,
+      branchName: data.branchName || null,
     };
 
     await db.insert(users).values(newUser);
@@ -210,6 +218,10 @@ export const adminCreateUser = createServerFn({ method: "POST" })
       phone: string;
       password: string;
       parentId: string;
+      ifscCode?: string;
+      accountNo?: string;
+      panNo?: string;
+      branchName?: string;
     }) => data
   )
   .handler(async ({ data }) => {
@@ -245,6 +257,10 @@ export const adminCreateUser = createServerFn({ method: "POST" })
       phone: data.phone,
       password: hashPassword(data.password),
       role: "user" as const,
+      ifscCode: data.ifscCode || null,
+      accountNo: data.accountNo || null,
+      panNo: data.panNo || null,
+      branchName: data.branchName || null,
     };
 
     await db.insert(users).values(newUser);

@@ -22,6 +22,10 @@ export const users = pgTable("users", {
   investmentDate: timestamp("investment_date"),
   investmentTier: varchar("investment_tier", { length: 10 }),
   isActive: boolean("is_active").notNull().default(true),
+  ifscCode: text("ifsc_code"),
+  accountNo: text("account_no"),
+  panNo: text("pan_no"),
+  branchName: text("branch_name"),
 });
 
 export const payouts = pgTable("payouts", {
