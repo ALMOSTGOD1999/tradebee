@@ -61,6 +61,31 @@ function ProfilePage() {
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const saveKYC = async () => {
+    setKycSaving(true);
+    try {
+      const result = await updateUserKYC({
+        data: {
+          userId: user.id,
+          ifscCode,
+          accountNo,
+          panNo,
+          branchName,
+        },
+      });
+      if (result.success) {
+        toast.success("KYC details saved!");
+        await refreshUser();
+      } else {
+        toast.error(result.message);
+      }
+    } catch {
+      toast.error("Failed to save KYC details");
+    } finally {
+      setKycSaving(false);
+    }
+  };
+
   return (
     <div className="space-y-6 max-w-2xl mx-auto">
       <div className="animate-fade-in-down">
