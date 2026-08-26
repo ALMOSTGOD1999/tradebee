@@ -3,10 +3,13 @@ import { useState, useEffect } from "react";
 import { useAuth } from "../../lib/auth";
 import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
 import { Badge } from "../../components/ui/badge";
+import { Input } from "../../components/ui/input";
+import { Label } from "../../components/ui/label";
+import { Button } from "../../components/ui/button";
 import { getInvestmentTier } from "../../lib/store";
-import { getUser } from "../../lib/server-actions";
+import { getUser, updateUserKYC } from "../../lib/server-actions";
 import type { User } from "../../lib/store";
-import { Copy, Check, TrendingUp, Link2, Mail, Phone, Calendar, Users } from "lucide-react";
+import { Copy, Check, TrendingUp, Link2, Mail, Phone, Calendar, Users, Shield, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/dashboard/profile")({
@@ -18,13 +21,30 @@ function formatCurrency(amount: number): string {
 }
 
 function ProfilePage() {
-  const { user } = useAuth();
+  const { user, refreshUser } = useAuth();
   const [copied, setCopied] = useState(false);
   const [parent, setParent] = useState<User | null>(null);
+
+  // KYC form state
+  const [ifscCode, setIfscCode] = useState(user?.ifscCode || "");
+  const [accountNo, setAccountNo] = useState(user?.accountNo || "");
+  const [panNo, setPanNo] = useState(user?.panNo || "");
+  const [branchName, setBranchName] = useState(user?.branchName || "");
+  const [kycSaving, setKycSaving] = useState(false);
 
   useEffect(() => {
     if (user?.parentId) {
       getUser({ data: { id: user.parentId } }).then(setParent);
+    }
+  }, [user]);
+
+  // Sync KYC fields when user data loads/refreshes
+  useEffect(() => {
+    if (user) {
+      setIfscCode(user.ifscCode || "");
+      setAccountNo(user.accountNo || "");
+      setPanNo(user.panNo || "");
+      setBranchName(user.branchName || "");
     }
   }, [user]);
 

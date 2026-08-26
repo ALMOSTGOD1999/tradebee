@@ -13,6 +13,10 @@ export interface User {
   investmentDate: Date | string | null;
   investmentTier: string | null;
   isActive: boolean;
+  ifscCode: string | null;
+  accountNo: string | null;
+  panNo: string | null;
+  branchName: string | null;
 }
 
 export type InvestmentTier =

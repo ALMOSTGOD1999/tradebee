@@ -80,11 +80,12 @@ const SALARY_TIERS = [
 
 export const initializeDB = createServerFn({ method: "POST" }).handler(
   async () => {
-    const existing = await db
+    // Seed admin (system controller — no team, no joinings)
+    const adminExists = await db
       .select()
       .from(users)
       .where(eq(users.id, "TB000001"));
-    if (existing.length === 0) {
+    if (adminExists.length === 0) {
       await db.insert(users).values({
         id: "TB000001",
         parentId: null,
@@ -95,6 +96,23 @@ export const initializeDB = createServerFn({ method: "POST" }).handler(
         role: "admin",
       });
     }
+
+    // Seed TB000002 — first user / root of the MLM tree
+    const rootUserExists = await db
+      .select()
+      .from(users)
+      .where(eq(users.id, "TB000002"));
+    if (rootUserExists.length === 0) {
+      await db.insert(users).values({
+        id: "TB000002",
+        parentId: null,
+        name: "Founder",
+        email: "founder@tradebee.in",
+        phone: "0000000001",
+        password: hashPassword("Tradebee@202610"),
+        role: "user",
+      });
+    }
   }
 );
 
@@ -103,19 +121,30 @@ export const initializeDB = createServerFn({ method: "POST" }).handler(
 export const loginUser = createServerFn({ method: "POST" })
   .validator((data: { email: string; password: string }) => data)
   .handler(async ({ data }) => {
-    // Auto-seed admin if no users exist
+    // Auto-seed admin + root user if no users exist
     try {
       const allUsers = await db.select().from(users);
       if (allUsers.length === 0) {
-        await db.insert(users).values({
-          id: "TB000001",
-          parentId: null,
-          name: "Admin",
-          email: "admin@tradebee.in",
-          phone: "0000000000",
-          password: hashPassword("Tradebee@202610"),
-          role: "admin",
-        });
+        await db.insert(users).values([
+          {
+            id: "TB000001",
+            parentId: null,
+            name: "Admin",
+            email: "admin@tradebee.in",
+            phone: "0000000000",
+            password: hashPassword("Tradebee@202610"),
+            role: "admin",
+          },
+          {
+            id: "TB000002",
+            parentId: null,
+            name: "Founder",
+            email: "founder@tradebee.in",
+            phone: "0000000001",
+            password: hashPassword("Tradebee@202610"),
+            role: "user",
+          },
+        ]);
       }
     } catch (e) {
       console.error("Seed error:", e);
@@ -176,6 +205,9 @@ export const signupUser = createServerFn({ method: "POST" })
       .where(eq(users.id, data.parentId));
     if (parentResult.length === 0) {
       return { success: false, message: "Invalid referral ID" };
+    }
+    if (parentResult[0]!.role === "admin") {
+      return { success: false, message: "Cannot join under admin" };
     }
 
     let id = generateUserId();
@@ -239,6 +271,9 @@ export const adminCreateUser = createServerFn({ method: "POST" })
       .where(eq(users.id, data.parentId));
     if (parentResult.length === 0) {
       return { success: false, message: "Parent ID not found" };
+    }
+    if (parentResult[0]!.role === "admin") {
+      return { success: false, message: "Cannot join under admin" };
     }
 
     let id = generateUserId();
@@ -348,7 +383,7 @@ export const getDirectReferrals = createServerFn({ method: "GET" })
     return await db
       .select()
       .from(users)
-      .where(eq(users.parentId, data.parentId));
+      .where(and(eq(users.parentId, data.parentId), eq(users.role, "user")));
   });
 
 export const getDownlineUsers = createServerFn({ method: "GET" })
@@ -364,10 +399,12 @@ export const getDownlineUsers = createServerFn({ method: "GET" })
       const current = queue.shift()!;
       if (current.depth > 0) {
         const user = allUsers.find((u) => u.id === current.id);
-        if (user) result.push(user);
+        if (user && user.role !== "admin") result.push(user);
       }
       if (current.depth < 21) {
-        const children = allUsers.filter((u) => u.parentId === current.id);
+        const children = allUsers.filter(
+          (u) => u.parentId === current.id && u.role !== "admin"
+        );
         for (const child of children) {
           queue.push({ id: child.id, depth: current.depth + 1 });
         }
@@ -424,6 +461,40 @@ export const updateUserProfile = createServerFn({ method: "POST" })
 
     await db.update(users).set(updates).where(eq(users.id, data.userId));
     return { success: true, message: "Profile updated successfully" };
+  });
+
+export const updateUserKYC = createServerFn({ method: "POST" })
+  .validator(
+    (data: {
+      userId: string;
+      ifscCode?: string;
+      accountNo?: string;
+      panNo?: string;
+      branchName?: string;
+    }) => data
+  )
+  .handler(async ({ data }) => {
+    const user = await db
+      .select()
+      .from(users)
+      .where(eq(users.id, data.userId));
+    const [found] = user;
+    if (!found) {
+      return { success: false, message: "User not found" };
+    }
+
+    const updates: Record<string, string | null> = {};
+    if (data.ifscCode !== undefined) updates["ifsc_code"] = data.ifscCode || null;
+    if (data.accountNo !== undefined) updates["account_no"] = data.accountNo || null;
+    if (data.panNo !== undefined) updates["pan_no"] = data.panNo || null;
+    if (data.branchName !== undefined) updates["branch_name"] = data.branchName || null;
+
+    if (Object.keys(updates).length === 0) {
+      return { success: false, message: "No KYC fields to update" };
+    }
+
+    await db.update(users).set(updates).where(eq(users.id, data.userId));
+    return { success: true, message: "KYC details updated successfully" };
   });
 
 export const changePassword = createServerFn({ method: "POST" })
@@ -595,9 +666,9 @@ export const getGenealogyTree = createServerFn({ method: "GET" })
 
     function buildNode(userId: string, depth: number): GenealogyNode | null {
       const user = allUsers.find((u) => u.id === userId);
-      if (!user) return null;
+      if (!user || user.role === "admin") return null;
       const children = allUsers
-        .filter((u) => u.parentId === userId)
+        .filter((u) => u.parentId === userId && u.role !== "admin")
         .map((c) => buildNode(c.id, depth + 1))
         .filter((n): n is GenealogyNode => n !== null);
       return {
