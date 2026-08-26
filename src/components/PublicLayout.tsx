@@ -1,5 +1,5 @@
-import { useState, type ReactNode } from "react";
-import { Link, useLocation } from "@tanstack/react-router";
+import { useState, useEffect, type ReactNode } from "react";
+import { Link, useLocation, useSearch } from "@tanstack/react-router";
 import { LogIn } from "lucide-react";
 
 import logo from "@/assets/tradebee-logo.png";
@@ -17,8 +17,24 @@ const navLinks = [
 
 export default function PublicLayout({ children }: { children: ReactNode }) {
   const [loginOpen, setLoginOpen] = useState(false);
-  const { login: authLogin } = useAuth();
+  const { login: authLogin, user } = useAuth();
   const location = useLocation();
+
+  // Read ?ref= param from URL to auto-open signup with referral ID
+  let refParam: string | undefined;
+  try {
+    const params = new URLSearchParams(location.search);
+    refParam = params.get("ref") || undefined;
+  } catch {
+    refParam = undefined;
+  }
+
+  // Auto-open signup dialog when referral link is visited
+  useEffect(() => {
+    if (refParam && !user) {
+      setLoginOpen(true);
+    }
+  }, [refParam, user]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -93,6 +109,8 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
         open={loginOpen}
         onOpenChange={setLoginOpen}
         onSuccess={authLogin}
+        referralId={refParam}
+        defaultTab={refParam ? "signup" : "login"}
       />
     </div>
   );
