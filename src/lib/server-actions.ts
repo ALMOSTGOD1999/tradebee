@@ -483,18 +483,75 @@ export const updateUserKYC = createServerFn({ method: "POST" })
       return { success: false, message: "User not found" };
     }
 
-    const updates: Record<string, string | null> = {};
-    if (data.ifscCode !== undefined) updates["ifsc_code"] = data.ifscCode || null;
-    if (data.accountNo !== undefined) updates["account_no"] = data.accountNo || null;
-    if (data.panNo !== undefined) updates["pan_no"] = data.panNo || null;
-    if (data.branchName !== undefined) updates["branch_name"] = data.branchName || null;
+    await db
+      .update(users)
+      .set({
+        ...(data.ifscCode !== undefined && { ifscCode: data.ifscCode || null }),
+        ...(data.accountNo !== undefined && { accountNo: data.accountNo || null }),
+        ...(data.panNo !== undefined && { panNo: data.panNo || null }),
+        ...(data.branchName !== undefined && { branchName: data.branchName || null }),
+      })
+      .where(eq(users.id, data.userId));
+    return { success: true, message: "KYC details updated successfully" };
+  });
 
-    if (Object.keys(updates).length === 0) {
-      return { success: false, message: "No KYC fields to update" };
+export const adminUpdateUser = createServerFn({ method: "POST" })
+  .validator(
+    (data: {
+      userId: string;
+      name?: string;
+      email?: string;
+      phone?: string;
+      role?: string;
+      isActive?: boolean;
+      parentId?: string | null;
+      ifscCode?: string | null;
+      accountNo?: string | null;
+      panNo?: string | null;
+      branchName?: string | null;
+    }) => data
+  )
+  .handler(async ({ data }) => {
+    const existing = await db
+      .select()
+      .from(users)
+      .where(eq(users.id, data.userId));
+    const [found] = existing;
+    if (!found) {
+      return { success: false, message: "User not found" };
+    }
+    if (found.role === "admin" && data.userId === "TB000001") {
+      return { success: false, message: "Cannot modify the primary admin" };
     }
 
-    await db.update(users).set(updates).where(eq(users.id, data.userId));
-    return { success: true, message: "KYC details updated successfully" };
+    // Check email uniqueness if changing
+    if (data.email && data.email !== found.email) {
+      const emailCheck = await db
+        .select()
+        .from(users)
+        .where(eq(users.email, data.email));
+      if (emailCheck.length > 0) {
+        return { success: false, message: "Email already in use" };
+      }
+    }
+
+    await db
+      .update(users)
+      .set({
+        ...(data.name !== undefined && { name: data.name }),
+        ...(data.email !== undefined && { email: data.email }),
+        ...(data.phone !== undefined && { phone: data.phone }),
+        ...(data.role !== undefined && { role: data.role }),
+        ...(data.isActive !== undefined && { isActive: data.isActive }),
+        ...(data.parentId !== undefined && { parentId: data.parentId || null }),
+        ...(data.ifscCode !== undefined && { ifscCode: data.ifscCode || null }),
+        ...(data.accountNo !== undefined && { accountNo: data.accountNo || null }),
+        ...(data.panNo !== undefined && { panNo: data.panNo || null }),
+        ...(data.branchName !== undefined && { branchName: data.branchName || null }),
+      })
+      .where(eq(users.id, data.userId));
+
+    return { success: true, message: "User updated successfully" };
   });
 
 export const changePassword = createServerFn({ method: "POST" })

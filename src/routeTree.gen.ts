@@ -25,6 +25,7 @@ import { Route as DashboardReferralsRouteImport } from './routes/dashboard/refer
 import { Route as DashboardTeamRouteImport } from './routes/dashboard/team'
 import { Route as DashboardAdminAllUsersRouteImport } from './routes/dashboard/admin/all-users'
 import { Route as DashboardAdminCreateUserRouteImport } from './routes/dashboard/admin/create-user'
+import { Route as DashboardAdminEditUserUserIdRouteImport } from './routes/dashboard/admin/edit-user/$userId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -107,6 +108,12 @@ const DashboardAdminCreateUserRoute =
     path: '/admin/create-user',
     getParentRoute: () => DashboardRoute,
   } as any)
+const DashboardAdminEditUserUserIdRoute =
+  DashboardAdminEditUserUserIdRouteImport.update({
+    id: '/admin/edit-user/$userId',
+    path: '/admin/edit-user/$userId',
+    getParentRoute: () => DashboardRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -125,6 +132,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/': typeof DashboardIndexRoute
   '/dashboard/admin/all-users': typeof DashboardAdminAllUsersRoute
   '/dashboard/admin/create-user': typeof DashboardAdminCreateUserRoute
+  '/dashboard/admin/edit-user/$userId': typeof DashboardAdminEditUserUserIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -142,6 +150,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof DashboardIndexRoute
   '/dashboard/admin/all-users': typeof DashboardAdminAllUsersRoute
   '/dashboard/admin/create-user': typeof DashboardAdminCreateUserRoute
+  '/dashboard/admin/edit-user/$userId': typeof DashboardAdminEditUserUserIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -161,6 +170,7 @@ export interface FileRoutesById {
   '/dashboard/': typeof DashboardIndexRoute
   '/dashboard/admin/all-users': typeof DashboardAdminAllUsersRoute
   '/dashboard/admin/create-user': typeof DashboardAdminCreateUserRoute
+  '/dashboard/admin/edit-user/$userId': typeof DashboardAdminEditUserUserIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -181,6 +191,7 @@ export interface FileRouteTypes {
     | '/dashboard/'
     | '/dashboard/admin/all-users'
     | '/dashboard/admin/create-user'
+    | '/dashboard/admin/edit-user/$userId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -198,6 +209,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/dashboard/admin/all-users'
     | '/dashboard/admin/create-user'
+    | '/dashboard/admin/edit-user/$userId'
   id:
     | '__root__'
     | '/'
@@ -216,6 +228,7 @@ export interface FileRouteTypes {
     | '/dashboard/'
     | '/dashboard/admin/all-users'
     | '/dashboard/admin/create-user'
+    | '/dashboard/admin/edit-user/$userId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -342,6 +355,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardAdminCreateUserRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/admin/edit-user/$userId': {
+      id: '/dashboard/admin/edit-user/$userId'
+      path: '/admin/edit-user/$userId'
+      fullPath: '/dashboard/admin/edit-user/$userId'
+      preLoaderRoute: typeof DashboardAdminEditUserUserIdRouteImport
+      parentRoute: typeof DashboardRoute
+    }
   }
 }
 
@@ -355,6 +375,7 @@ interface DashboardRouteChildren {
   DashboardIndexRoute: typeof DashboardIndexRoute
   DashboardAdminAllUsersRoute: typeof DashboardAdminAllUsersRoute
   DashboardAdminCreateUserRoute: typeof DashboardAdminCreateUserRoute
+  DashboardAdminEditUserUserIdRoute: typeof DashboardAdminEditUserUserIdRoute
 }
 
 const DashboardRouteChildren: DashboardRouteChildren = {
@@ -367,6 +388,7 @@ const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardIndexRoute: DashboardIndexRoute,
   DashboardAdminAllUsersRoute: DashboardAdminAllUsersRoute,
   DashboardAdminCreateUserRoute: DashboardAdminCreateUserRoute,
+  DashboardAdminEditUserUserIdRoute: DashboardAdminEditUserUserIdRoute,
 }
 
 const DashboardRouteWithChildren = DashboardRoute._addFileChildren(

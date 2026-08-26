@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { useAuth } from "../../../lib/auth";
 import { getAllUsers, updateUserInvestment } from "../../../lib/server-actions";
@@ -8,7 +8,7 @@ import { Badge } from "../../../components/ui/badge";
 import { Input } from "../../../components/ui/input";
 import { Label } from "../../../components/ui/label";
 import { toast } from "sonner";
-import { Search, Users, IndianRupee } from "lucide-react";
+import { Search, Users, IndianRupee, Pencil } from "lucide-react";
 
 export const Route = createFileRoute("/dashboard/admin/all-users")({
   component: AdminAllUsersPage,
@@ -87,6 +87,9 @@ function AdminAllUsersPage() {
                       <div className="flex items-center gap-1 text-sm"><IndianRupee className="h-3 w-3" /><span className="font-bold">{formatCurrency(inv)}</span></div>
                       {u.investmentTier && <p className="text-xs text-muted-foreground">{u.investmentTier}</p>}
                       <button onClick={() => { setEditingId(u.id); setInvestAmount(inv.toString()); }} className="text-xs text-amber-600 hover:underline mt-1">Edit Investment</button>
+                      <Link to="/dashboard/admin/edit-user/$userId" params={{ userId: u.id }} className="text-xs text-blue-600 hover:underline mt-1 flex items-center gap-1">
+                        <Pencil className="h-3 w-3" /> Edit User
+                      </Link>
                     </div>
                   </div>
                   {editingId === u.id && (
