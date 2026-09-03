@@ -107,18 +107,14 @@ function AboutPage() {
             transition={{ duration: 0.8 }}
             className="max-w-3xl"
           >
-            <p className="text-xs font-semibold tracking-[0.35em] text-primary">
-              OUR STORY
-            </p>
+            <p className="text-xs font-semibold tracking-[0.35em] text-primary">OUR STORY</p>
             <h1 className="mt-4 text-4xl font-bold leading-tight sm:text-5xl lg:text-6xl">
-              Building wealth through{" "}
-              <span className="text-primary">patience</span> and{" "}
+              Building wealth through <span className="text-primary">patience</span> and{" "}
               <span className="text-primary">precision</span>
             </h1>
             <p className="mt-6 max-w-2xl text-lg text-muted-foreground">
-              Tradebee is a forex and share market investment company built for
-              patient capital — structured monthly returns, transparent plans and
-              a community that grows together.
+              Tradebee is a forex and share market investment company built for patient capital —
+              structured monthly returns, transparent plans and a community that grows together.
             </p>
           </motion.div>
         </div>
@@ -137,10 +133,9 @@ function AboutPage() {
               <Target className="h-10 w-10 text-primary" />
               <h3 className="mt-4 text-2xl font-bold">Our Mission</h3>
               <p className="mt-4 text-muted-foreground leading-relaxed">
-                To provide accessible, transparent investment opportunities in
-                forex and share markets for individuals who seek consistent
-                returns without the complexity of daily trading. We bridge the
-                gap between professional trading and retail investors through
+                To provide accessible, transparent investment opportunities in forex and share
+                markets for individuals who seek consistent returns without the complexity of daily
+                trading. We bridge the gap between professional trading and retail investors through
                 structured plans and expert management.
               </p>
             </motion.div>
@@ -153,10 +148,9 @@ function AboutPage() {
               <Eye className="h-10 w-10 text-primary" />
               <h3 className="mt-4 text-2xl font-bold">Our Vision</h3>
               <p className="mt-4 text-muted-foreground leading-relaxed">
-                To become India's most trusted forex and equity investment
-                platform — where every investor, from first-timer to seasoned
-                professional, finds a plan that fits their goals. We envision a
-                community built on trust, performance and shared success.
+                To become India's most trusted forex and equity investment platform — where every
+                investor, from first-timer to seasoned professional, finds a plan that fits their
+                goals. We envision a community built on trust, performance and shared success.
               </p>
             </motion.div>
           </div>
@@ -172,15 +166,13 @@ function AboutPage() {
             transition={{ duration: 0.6 }}
             className="max-w-2xl"
           >
-            <p className="text-xs font-semibold tracking-[0.35em] text-primary">
-              WHAT WE DO
-            </p>
+            <p className="text-xs font-semibold tracking-[0.35em] text-primary">WHAT WE DO</p>
             <h2 className="mt-3 text-3xl font-bold sm:text-4xl">
               A trading desk, investment plans and a community
             </h2>
             <p className="mt-3 text-muted-foreground">
-              Our team works the currency and equity markets daily, while our
-              plans let members participate without staring at charts.
+              Our team works the currency and equity markets daily, while our plans let members
+              participate without staring at charts.
             </p>
           </motion.div>
 
@@ -211,15 +203,11 @@ function AboutPage() {
             transition={{ duration: 0.6 }}
             className="max-w-2xl"
           >
-            <p className="text-xs font-semibold tracking-[0.35em] text-primary">
-              OUR VALUES
-            </p>
-            <h2 className="mt-3 text-3xl font-bold sm:text-4xl">
-              What drives every decision
-            </h2>
+            <p className="text-xs font-semibold tracking-[0.35em] text-primary">OUR VALUES</p>
+            <h2 className="mt-3 text-3xl font-bold sm:text-4xl">What drives every decision</h2>
             <p className="mt-3 text-muted-foreground">
-              The principles that guide how we manage capital and build
-              relationships with our community.
+              The principles that guide how we manage capital and build relationships with our
+              community.
             </p>
           </motion.div>
 
@@ -250,12 +238,8 @@ function AboutPage() {
             transition={{ duration: 0.6 }}
             className="max-w-2xl"
           >
-            <p className="text-xs font-semibold tracking-[0.35em] text-primary">
-              OUR JOURNEY
-            </p>
-            <h2 className="mt-3 text-3xl font-bold sm:text-4xl">
-              From idea to impact
-            </h2>
+            <p className="text-xs font-semibold tracking-[0.35em] text-primary">OUR JOURNEY</p>
+            <h2 className="mt-3 text-3xl font-bold sm:text-4xl">From idea to impact</h2>
           </motion.div>
 
           <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -287,12 +271,10 @@ function AboutPage() {
             <p className="text-xs font-semibold tracking-[0.35em] text-primary">
               PAYMENT INFORMATION
             </p>
-            <h2 className="mt-3 text-3xl font-bold sm:text-4xl">
-              Invest with confidence
-            </h2>
+            <h2 className="mt-3 text-3xl font-bold sm:text-4xl">Invest with confidence</h2>
             <p className="mt-3 text-muted-foreground">
-              Use the bank details below for investments. Always verify account
-              details before transferring funds.
+              Use the bank details below for investments. Always verify account details before
+              transferring funds.
             </p>
           </motion.div>
 
@@ -321,7 +303,7 @@ function AboutPage() {
                     field: "account",
                   },
                   { label: "IFSC Code", value: "PUNB0489300", field: "ifsc" },
-                  { label: "Branch", value: "Kestopur", field: "branch" },
+                  { label: "Branch", value: "KESTOPUR", field: "branch" },
                 ].map((item) => (
                   <div
                     key={item.field}
@@ -331,9 +313,7 @@ function AboutPage() {
                       <p className="text-xs tracking-widest text-muted-foreground">
                         {item.label.toUpperCase()}
                       </p>
-                      <p className="mt-0.5 font-mono font-semibold">
-                        {item.value}
-                      </p>
+                      <p className="mt-0.5 font-mono font-semibold">{item.value}</p>
                     </div>
                     <button
                       onClick={() => handleCopy(item.value, item.field)}
@@ -352,8 +332,8 @@ function AboutPage() {
 
               <div className="mt-6 rounded-lg border border-amber-500/20 bg-amber-500/5 p-4">
                 <p className="text-xs text-amber-600 dark:text-amber-400">
-                  ⚠️ Please verify all details before making a payment. Contact
-                  support if you notice any discrepancies.
+                  ⚠️ Please verify all details before making a payment. Contact support if you
+                  notice any discrepancies.
                 </p>
               </div>
             </motion.div>
@@ -366,9 +346,7 @@ function AboutPage() {
               className="card-elevated flex flex-col items-center justify-center p-8"
             >
               <h3 className="text-xl font-bold">Scan to Pay</h3>
-              <p className="mt-2 text-sm text-muted-foreground">
-                UPI / QR Payment
-              </p>
+              <p className="mt-2 text-sm text-muted-foreground">UPI / QR Payment</p>
 
               {/* Dummy QR Code Placeholder */}
               <div className="mt-8 flex h-56 w-56 flex-col items-center justify-center rounded-xl border-2 border-dashed border-border bg-muted/50">
@@ -386,14 +364,11 @@ function AboutPage() {
                     />
                   ))}
                 </div>
-                <p className="mt-4 text-xs text-muted-foreground">
-                  QR Code Coming Soon
-                </p>
+                <p className="mt-4 text-xs text-muted-foreground">QR Code Coming Soon</p>
               </div>
 
               <p className="mt-6 text-center text-sm text-muted-foreground">
-                Scan the QR code with any UPI app to make a payment directly to
-                our account.
+                Scan the QR code with any UPI app to make a payment directly to our account.
               </p>
 
               <div className="mt-6 grid grid-cols-3 gap-4 text-center">
@@ -420,12 +395,10 @@ function AboutPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="text-3xl font-bold sm:text-4xl">
-              Ready to grow with us?
-            </h2>
+            <h2 className="text-3xl font-bold sm:text-4xl">Ready to grow with us?</h2>
             <p className="mx-auto mt-4 max-w-xl text-muted-foreground">
-              Join a community of investors who chose transparency, discipline
-              and consistent returns. Start with a plan that fits your capital.
+              Join a community of investors who chose transparency, discipline and consistent
+              returns. Start with a plan that fits your capital.
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-4">
               <a
