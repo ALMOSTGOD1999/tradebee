@@ -78,7 +78,7 @@ function DashboardLayout() {
               <Hexagon className="h-5 w-5 text-white" />
             </div>
             <div>
-              <span className="font-bold text-lg text-white tracking-tight">Trading Bee</span>
+              <span className="font-bold text-lg text-white tracking-tight">Trade Bee</span>
               <p className="text-[10px] text-amber-400/70 font-medium tracking-widest uppercase">Investment Platform</p>
             </div>
             <Button variant="ghost" size="icon" className="lg:hidden ml-auto text-white/60 hover:text-white" onClick={() => setSidebarOpen(false)}>

@@ -37,7 +37,7 @@ export function LoginDialog({
       <DialogContent className="sm:max-w-md p-0 gap-0 overflow-hidden">
         <DialogHeader className="p-6 pb-2">
           <DialogTitle className="text-2xl font-bold text-gradient-amber">
-            Welcome to Trading Bee
+            Welcome to Trade Bee
           </DialogTitle>
           <DialogDescription>
             Login or create an account to get started

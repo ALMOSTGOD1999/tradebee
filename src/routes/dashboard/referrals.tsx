@@ -34,7 +34,7 @@ function ReferralsPage() {
 
   const shareLink = () => {
     if (navigator.share) {
-      navigator.share({ title: "Join Trading Bee", text: `Join using my link: ${inviteLink}`, url: inviteLink });
+      navigator.share({ title: "Join Trade Bee", text: `Join using my link: ${inviteLink}`, url: inviteLink });
     } else {
       copyLink();
     }
