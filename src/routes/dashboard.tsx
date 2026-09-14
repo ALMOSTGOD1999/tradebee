@@ -62,7 +62,7 @@ function DashboardLayout() {
   );
 
   return (
-    <div className="flex min-h-screen bg-[#f8f6f3]">
+    <div className="flex min-h-screen bg-[#0f172a]">
       {sidebarOpen && (
         <div className="fixed inset-0 z-40 bg-black/30 backdrop-blur-sm lg:hidden transition-opacity" onClick={() => setSidebarOpen(false)} />
       )}
@@ -139,17 +139,17 @@ function DashboardLayout() {
       </aside>
 
       <div className="flex-1 flex flex-col min-w-0">
-        <header className="flex items-center h-16 px-4 lg:px-8 bg-white/70 backdrop-blur-xl border-b border-stone-200/60 sticky top-0 z-30">
+        <header className="flex items-center h-16 px-4 lg:px-8 bg-[#1e293b]/80 backdrop-blur-xl border-b border-slate-700/60 sticky top-0 z-30">
           <Button variant="ghost" size="icon" className="lg:hidden mr-3 text-stone-500" onClick={() => setSidebarOpen(true)}>
             <Menu className="h-5 w-5" />
           </Button>
           <div className="flex items-center gap-3">
-            <h1 className="text-lg font-bold text-stone-800">
+            <h1 className="text-lg font-bold text-white">
               {currentPage?.label || "Dashboard"}
             </h1>
           </div>
           <div className="ml-auto flex items-center gap-3">
-            <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-stone-100/80 text-stone-500 text-sm">
+            <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-700/50 text-slate-300 text-sm">
               <span className="text-xs font-medium">{user.name}</span>
             </div>
           </div>
