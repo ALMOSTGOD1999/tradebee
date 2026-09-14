@@ -4,7 +4,7 @@ import { useAuth } from "../../lib/auth";
 import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
 import { Badge } from "../../components/ui/badge";
 import { getInvestmentTier, calculateDirectReferralBonus, calculateLevelBonus, calculateSalary, formatCurrency } from "../../lib/store";
-import { getDirectReferrals, getDownlineUsers } from "../../lib/server-actions";
+import { getDirectReferrals, getGenealogyTree } from "../../lib/server-actions";
 import type { User } from "../../lib/store";
 import { Button } from "../../components/ui/button";
 import { Users, TrendingUp, Wallet, Award, ArrowUpRight, ChevronRight, Zap, Star, ArrowRight } from "lucide-react";
@@ -13,22 +13,41 @@ export const Route = createFileRoute("/dashboard/")({
   component: DashboardHome,
 });
 
+interface TreeInfo { members: number; active: number; invest: number; depth: number; allNodes: { id: string; investment: number }[] }
+
+function countTree(tree: any): TreeInfo {
+  const info: TreeInfo = { members: 0, active: 0, invest: 0, depth: 0, allNodes: [] };
+  (function walk(n: any) {
+    if (n.depth > 0) {
+      info.members++;
+      info.allNodes.push({ id: n.id, investment: n.investment });
+    }
+    if (n.investment > 0) { info.active++; info.invest += n.investment; }
+    if (n.depth > info.depth) info.depth = n.depth;
+    n.children.forEach(walk);
+  })(tree);
+  return info;
+}
+
 function DashboardHome() {
   const { user } = useAuth();
   const [directReferrals, setDirectReferrals] = useState<User[]>([]);
-  const [downline, setDownline] = useState<User[]>([]);
+  const [treeInfo, setTreeInfo] = useState<TreeInfo | null>(null);
   const [allUsers, setAllUsers] = useState<User[]>([]);
 
   useEffect(() => {
     if (!user) return;
     const load = async () => {
-      const [direct, down] = await Promise.all([
+      const [direct, tree] = await Promise.all([
         getDirectReferrals({ data: { parentId: user.id } }),
-        getDownlineUsers({ data: { parentId: user.id } }),
+        getGenealogyTree({ data: { userId: user.id } }),
       ]);
       setDirectReferrals(direct);
-      setDownline(down);
-      setAllUsers([...direct, ...down]);
+      if (tree) {
+        const info = countTree(tree);
+        setTreeInfo(info);
+        setAllUsers(info.allNodes.map(n => ({ id: n.id, investment: n.investment } as User)));
+      }
     };
     load();
   }, [user]);
@@ -63,7 +82,7 @@ function DashboardHome() {
       shadowColor: "shadow-blue-500/20",
       bgLight: "bg-blue-50",
       textColor: "text-blue-600",
-      detail: "Downline: " + downline.length + " members",
+      detail: "Downline: " + (treeInfo?.members ?? 0) + " members",
       trend: null,
     },
     {
@@ -79,13 +98,13 @@ function DashboardHome() {
     },
     {
       label: "Total Team",
-      value: (directReferrals.length + downline.length).toString(),
+      value: (directReferrals.length + (treeInfo?.members ?? 0)).toString(),
       icon: Users,
       gradient: "from-teal-400 to-cyan-500",
       shadowColor: "shadow-teal-500/20",
       bgLight: "bg-teal-50",
       textColor: "text-teal-600",
-      detail: directReferrals.length + " direct, " + downline.length + " downline",
+      detail: directReferrals.length + " direct, " + (treeInfo?.members ?? 0) + " downline",
       trend: null,
     },
     {

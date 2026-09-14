@@ -777,3 +777,125 @@ export const getGenealogyTree = createServerFn({ method: "GET" })
 
     return buildNode(data.userId, 0);
   });
+
+// ─── Activation Package ─────────────────────────────────────────────────────
+
+export const ACTIVATION_PACKAGES = [
+  { id: "5000", label: "Starter Pack", amount: 5000, description: "Basic activation package" },
+  { id: "10000", label: "Premium Pack", amount: 10000, description: "Premium activation package" },
+] as const;
+
+export const requestActivation = createServerFn({ method: "POST" })
+  .validator(
+    (data: {
+      userId: string;
+      package: string; // "5000" or "10000"
+      paymentProof: string; // base64 data URL of screenshot
+    }) => data
+  )
+  .handler(async ({ data }) => {
+    const user = await db.select().from(users).where(eq(users.id, data.userId));
+    const [found] = user;
+    if (!found) return { success: false, message: "User not found" };
+    if (found.role === "admin") return { success: false, message: "Admin accounts cannot request activation" };
+    if (found.activationStatus === "pending") return { success: false, message: "You already have a pending request" };
+    if (found.isActive && found.activationPackage) return { success: false, message: "Account is already activated" };
+
+    if (!["5000", "10000"].includes(data.package)) {
+      return { success: false, message: "Invalid package selected" };
+    }
+    if (!data.paymentProof || data.paymentProof.length < 100) {
+      return { success: false, message: "Payment proof is required" };
+    }
+
+    await db.update(users).set({
+      activationPackage: data.package,
+      paymentProof: data.paymentProof,
+      activationStatus: "pending",
+    }).where(eq(users.id, data.userId));
+
+    return { success: true, message: "Activation request submitted. Waiting for admin approval." };
+  });
+
+export const getPendingActivationRequests = createServerFn({ method: "GET" }).handler(
+  async () => {
+    return await db
+      .select({
+        id: users.id,
+        name: users.name,
+        email: users.email,
+        phone: users.phone,
+        activationPackage: users.activationPackage,
+        paymentProof: users.paymentProof,
+        activationStatus: users.activationStatus,
+        createdAt: users.createdAt,
+      })
+      .from(users)
+      .where(eq(users.activationStatus, "pending"));
+  }
+);
+
+export const approveActivation = createServerFn({ method: "POST" })
+  .validator((data: { userId: string }) => data)
+  .handler(async ({ data }) => {
+    const user = await db.select().from(users).where(eq(users.id, data.userId));
+    const [found] = user;
+    if (!found) return { success: false, message: "User not found" };
+    if (found.activationStatus !== "pending") return { success: false, message: "No pending request for this user" };
+
+    await db.update(users).set({
+      isActive: true,
+      activationStatus: "approved",
+    }).where(eq(users.id, data.userId));
+
+    return { success: true, message: `Account ${data.userId} activated successfully` };
+  });
+
+export const rejectActivation = createServerFn({ method: "POST" })
+  .validator((data: { userId: string }) => data)
+  .handler(async ({ data }) => {
+    const user = await db.select().from(users).where(eq(users.id, data.userId));
+    const [found] = user;
+    if (!found) return { success: false, message: "User not found" };
+
+    await db.update(users).set({
+      activationStatus: "rejected",
+      paymentProof: null,
+    }).where(eq(users.id, data.userId));
+
+    return { success: true, message: `Activation request rejected for ${data.userId}` };
+  });
+
+export const adminDirectActivate = createServerFn({ method: "POST" })
+  .validator((data: { userId: string }) => data)
+  .handler(async ({ data }) => {
+    const user = await db.select().from(users).where(eq(users.id, data.userId));
+    const [found] = user;
+    if (!found) return { success: false, message: "User not found" };
+    if (found.role === "admin") return { success: false, message: "Cannot activate admin" };
+
+    // Free/admin activation — no package, no payment proof
+    await db.update(users).set({
+      isActive: true,
+      activationPackage: null,
+      paymentProof: null,
+      activationStatus: null,
+    }).where(eq(users.id, data.userId));
+
+    return { success: true, message: `Account ${data.userId} activated (free/admin)` };
+  });
+
+export const getActivationStatus = createServerFn({ method: "GET" })
+  .validator((data: { userId: string }) => data)
+  .handler(async ({ data }) => {
+    const user = await db
+      .select({
+        id: users.id,
+        isActive: users.isActive,
+        activationPackage: users.activationPackage,
+        activationStatus: users.activationStatus,
+      })
+      .from(users)
+      .where(eq(users.id, data.userId));
+    return user[0] || null;
+  });

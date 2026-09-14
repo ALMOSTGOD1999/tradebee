@@ -26,6 +26,10 @@ export const users = pgTable("users", {
   accountNo: text("account_no"),
   panNo: text("pan_no"),
   branchName: text("branch_name"),
+  // Activation package fields
+  activationPackage: varchar("activation_package", { length: 10 }), // "5000" or "10000" or null (free/admin-activated)
+  paymentProof: text("payment_proof"), // base64 or URL of payment screenshot
+  activationStatus: varchar("activation_status", { length: 10 }), // "pending", "approved", "rejected" or null (admin-activated)
 });
 
 export const payouts = pgTable("payouts", {
