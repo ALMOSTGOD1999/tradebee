@@ -17,6 +17,7 @@ import {
   Hexagon,
   UserPlus,
   Layers,
+  Zap,
 } from "lucide-react";
 import { cn } from "../lib/utils";
 
@@ -27,6 +28,7 @@ export const Route = createFileRoute("/dashboard")({
 const navItems = [
   { to: "/dashboard" as const, label: "Dashboard", icon: LayoutDashboard },
   { to: "/dashboard/profile" as const, label: "Profile", icon: User },
+  { to: "/dashboard/activation" as const, label: "Activation", icon: Zap },
   { to: "/dashboard/add-user" as const, label: "Add User", icon: UserPlus },
   { to: "/dashboard/genealogy" as const, label: "Genealogy", icon: TreePine },
   { to: "/dashboard/levels" as const, label: "Levels", icon: Layers },
@@ -38,6 +40,7 @@ const navItems = [
 const adminNavItems = [
   { to: "/dashboard/admin/create-user" as const, label: "Create User", icon: Shield },
   { to: "/dashboard/admin/all-users" as const, label: "All Users", icon: Users },
+  { to: "/dashboard/admin/activation-requests" as const, label: "Activation Requests", icon: Zap },
 ];
 
 function DashboardLayout() {

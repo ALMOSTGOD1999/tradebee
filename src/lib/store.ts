@@ -17,6 +17,9 @@ export interface User {
   accountNo: string | null;
   panNo: string | null;
   branchName: string | null;
+  activationPackage: string | null;
+  paymentProof: string | null;
+  activationStatus: string | null;
 }
 
 export type InvestmentTier =

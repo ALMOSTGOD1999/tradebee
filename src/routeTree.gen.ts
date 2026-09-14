@@ -24,7 +24,9 @@ import { Route as DashboardLevelsRouteImport } from './routes/dashboard/levels'
 import { Route as DashboardProfileRouteImport } from './routes/dashboard/profile'
 import { Route as DashboardReferralsRouteImport } from './routes/dashboard/referrals'
 import { Route as DashboardTeamRouteImport } from './routes/dashboard/team'
+import { Route as DashboardActivationRouteImport } from './routes/dashboard/activation'
 import { Route as DashboardAdminAllUsersRouteImport } from './routes/dashboard/admin/all-users'
+import { Route as DashboardAdminActivationRequestsRouteImport } from './routes/dashboard/admin/activation-requests'
 import { Route as DashboardAdminCreateUserRouteImport } from './routes/dashboard/admin/create-user'
 import { Route as DashboardAdminEditUserUserIdRouteImport } from './routes/dashboard/admin/edit-user/$userId'
 
@@ -103,9 +105,19 @@ const DashboardTeamRoute = DashboardTeamRouteImport.update({
   path: '/team',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardActivationRoute = DashboardActivationRouteImport.update({
+  id: '/activation',
+  path: '/activation',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const DashboardAdminAllUsersRoute = DashboardAdminAllUsersRouteImport.update({
   id: '/admin/all-users',
   path: '/admin/all-users',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardAdminActivationRequestsRoute = DashboardAdminActivationRequestsRouteImport.update({
+  id: '/admin/activation-requests',
+  path: '/admin/activation-requests',
   getParentRoute: () => DashboardRoute,
 } as any)
 const DashboardAdminCreateUserRoute =
@@ -138,8 +150,10 @@ export interface FileRoutesByFullPath {
   '/dashboard/team': typeof DashboardTeamRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/dashboard/admin/all-users': typeof DashboardAdminAllUsersRoute
+  '/dashboard/admin/activation-requests': typeof DashboardAdminActivationRequestsRoute
   '/dashboard/admin/create-user': typeof DashboardAdminCreateUserRoute
   '/dashboard/admin/edit-user/$userId': typeof DashboardAdminEditUserUserIdRoute
+  '/dashboard/activation': typeof DashboardActivationRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -157,8 +171,10 @@ export interface FileRoutesByTo {
   '/dashboard/team': typeof DashboardTeamRoute
   '/dashboard': typeof DashboardIndexRoute
   '/dashboard/admin/all-users': typeof DashboardAdminAllUsersRoute
+  '/dashboard/admin/activation-requests': typeof DashboardAdminActivationRequestsRoute
   '/dashboard/admin/create-user': typeof DashboardAdminCreateUserRoute
   '/dashboard/admin/edit-user/$userId': typeof DashboardAdminEditUserUserIdRoute
+  '/dashboard/activation': typeof DashboardActivationRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -178,8 +194,10 @@ export interface FileRoutesById {
   '/dashboard/team': typeof DashboardTeamRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/dashboard/admin/all-users': typeof DashboardAdminAllUsersRoute
+  '/dashboard/admin/activation-requests': typeof DashboardAdminActivationRequestsRoute
   '/dashboard/admin/create-user': typeof DashboardAdminCreateUserRoute
   '/dashboard/admin/edit-user/$userId': typeof DashboardAdminEditUserUserIdRoute
+  '/dashboard/activation': typeof DashboardActivationRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -200,8 +218,10 @@ export interface FileRouteTypes {
     | '/dashboard/team'
     | '/dashboard/'
     | '/dashboard/admin/all-users'
+    | '/dashboard/admin/activation-requests'
     | '/dashboard/admin/create-user'
     | '/dashboard/admin/edit-user/$userId'
+    | '/dashboard/activation'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -219,8 +239,10 @@ export interface FileRouteTypes {
     | '/dashboard/team'
     | '/dashboard'
     | '/dashboard/admin/all-users'
+    | '/dashboard/admin/activation-requests'
     | '/dashboard/admin/create-user'
     | '/dashboard/admin/edit-user/$userId'
+    | '/dashboard/activation'
   id:
     | '__root__'
     | '/'
@@ -239,8 +261,10 @@ export interface FileRouteTypes {
     | '/dashboard/team'
     | '/dashboard/'
     | '/dashboard/admin/all-users'
+    | '/dashboard/admin/activation-requests'
     | '/dashboard/admin/create-user'
     | '/dashboard/admin/edit-user/$userId'
+    | '/dashboard/activation'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -367,6 +391,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardAdminAllUsersRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/admin/activation-requests': {
+      id: '/dashboard/admin/activation-requests'
+      path: '/admin/activation-requests'
+      fullPath: '/dashboard/admin/activation-requests'
+      preLoaderRoute: typeof DashboardAdminActivationRequestsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/dashboard/admin/create-user': {
       id: '/dashboard/admin/create-user'
       path: '/admin/create-user'
@@ -381,10 +412,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardAdminEditUserUserIdRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/activation': {
+      id: '/dashboard/activation'
+      path: '/activation'
+      fullPath: '/dashboard/activation'
+      preLoaderRoute: typeof DashboardActivationRouteImport
+      parentRoute: typeof DashboardRoute
+    }
   }
 }
 
 interface DashboardRouteChildren {
+  DashboardActivationRoute: typeof DashboardActivationRoute
   DashboardAddUserRoute: typeof DashboardAddUserRoute
   DashboardGenealogyRoute: typeof DashboardGenealogyRoute
   DashboardInvestmentRoute: typeof DashboardInvestmentRoute
@@ -394,11 +433,13 @@ interface DashboardRouteChildren {
   DashboardTeamRoute: typeof DashboardTeamRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
   DashboardAdminAllUsersRoute: typeof DashboardAdminAllUsersRoute
+  DashboardAdminActivationRequestsRoute: typeof DashboardAdminActivationRequestsRoute
   DashboardAdminCreateUserRoute: typeof DashboardAdminCreateUserRoute
   DashboardAdminEditUserUserIdRoute: typeof DashboardAdminEditUserUserIdRoute
 }
 
 const DashboardRouteChildren: DashboardRouteChildren = {
+  DashboardActivationRoute: DashboardActivationRoute,
   DashboardAddUserRoute: DashboardAddUserRoute,
   DashboardGenealogyRoute: DashboardGenealogyRoute,
   DashboardInvestmentRoute: DashboardInvestmentRoute,
@@ -408,6 +449,7 @@ const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardTeamRoute: DashboardTeamRoute,
   DashboardIndexRoute: DashboardIndexRoute,
   DashboardAdminAllUsersRoute: DashboardAdminAllUsersRoute,
+  DashboardAdminActivationRequestsRoute: DashboardAdminActivationRequestsRoute,
   DashboardAdminCreateUserRoute: DashboardAdminCreateUserRoute,
   DashboardAdminEditUserUserIdRoute: DashboardAdminEditUserUserIdRoute,
 }

@@ -15,6 +15,13 @@
       "when": 1787663467195,
       "tag": "0001_curious_whistler",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1789396349369,
+      "tag": "0002_add_activation_fields",
+      "breakpoints": true
     }
   ]
 }

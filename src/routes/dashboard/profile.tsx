@@ -8,9 +8,9 @@ import { PasswordInput } from "../../components/ui/password-input";
 import { Label } from "../../components/ui/label";
 import { Button } from "../../components/ui/button";
 import { getInvestmentTier } from "../../lib/store";
-import { getUser, updateUserKYC, changePassword } from "../../lib/server-actions";
+import { getUser, updateUserKYC, changePassword, ACTIVATION_PACKAGES } from "../../lib/server-actions";
 import type { User } from "../../lib/store";
-import { Copy, Check, TrendingUp, Link2, Mail, Phone, Calendar, Users, Shield, Loader2, Lock } from "lucide-react";
+import { Copy, Check, TrendingUp, Link2, Mail, Phone, Calendar, Users, Shield, Loader2, Lock, Zap, IndianRupee, Clock, XCircle } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/dashboard/profile")({
@@ -166,6 +166,12 @@ function ProfilePage() {
               <span className="text-stone-500 text-sm">Sponsored By</span>
               <span className="font-mono text-sm text-stone-700">{parent ? parent.name + " (" + parent.id + ")" : "--"}</span>
             </div>
+            <div className="flex justify-between py-3 hover:bg-stone-50/50 px-2 -mx-2 rounded-lg transition-colors">
+              <span className="text-stone-500 flex items-center gap-2 text-sm"><Zap className="h-4 w-4" /> Activation</span>
+              <span className={`text-sm font-medium ${user.isActive ? "text-emerald-600" : "text-stone-400"}`}>
+                {user.isActive && user.activationPackage ? `Active (₹${Number(user.activationPackage).toLocaleString("en-IN")})` : user.isActive ? "Active (Free)" : "Inactive"}
+              </span>
+            </div>
           </div>
         </CardContent>
       </Card>
@@ -195,6 +201,59 @@ function ProfilePage() {
             </div>
           )}
           {investment === 0 && <p className="text-sm text-stone-400 px-3">No investment yet</p>}
+        </CardContent>
+      </Card>
+
+      <Card className="animate-fade-in-up stagger-3 border-0 shadow-lg bg-white overflow-hidden">
+        <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-amber-400 to-orange-500" />
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center">
+              <Zap className="h-4 w-4 text-amber-600" />
+            </div>
+            <span className="text-stone-800">Activation Status</span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-3">
+            {user.isActive && user.activationPackage ? (
+              <div className="p-4 bg-emerald-50 rounded-xl border border-emerald-200">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center">
+                    <Zap className="h-5 w-5 text-emerald-600" />
+                  </div>
+                  <div>
+                    <p className="font-bold text-emerald-700">Account Active</p>
+                    <p className="text-sm text-emerald-600">Package: {ACTIVATION_PACKAGES.find(p => p.id === user.activationPackage)?.label || "Premium"} ({formatCurrency(Number(user.activationPackage))})</p>
+                  </div>
+                </div>
+              </div>
+            ) : user.isActive ? (
+              <div className="p-4 bg-emerald-50 rounded-xl border border-emerald-200">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center">
+                    <Check className="h-5 w-5 text-emerald-600" />
+                  </div>
+                  <div>
+                    <p className="font-bold text-emerald-700">Account Active</p>
+                    <p className="text-sm text-emerald-600">Free / Admin-activated account</p>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="p-4 bg-amber-50 rounded-xl border border-amber-200">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center">
+                    <Clock className="h-5 w-5 text-amber-600" />
+                  </div>
+                  <div>
+                    <p className="font-bold text-amber-700">Account Inactive</p>
+                    <p className="text-sm text-amber-600">Visit the Activation page to choose a package and activate your account.</p>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
         </CardContent>
       </Card>
 
