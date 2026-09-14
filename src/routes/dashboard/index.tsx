@@ -78,6 +78,17 @@ function DashboardHome() {
       trend: totalEarnings > 0 ? "+" + formatCurrency(totalEarnings) : null,
     },
     {
+      label: "Total Team",
+      value: (directReferrals.length + downline.length).toString(),
+      icon: Users,
+      gradient: "from-teal-400 to-cyan-500",
+      shadowColor: "shadow-teal-500/20",
+      bgLight: "bg-teal-50",
+      textColor: "text-teal-600",
+      detail: directReferrals.length + " direct, " + downline.length + " downline",
+      trend: null,
+    },
+    {
       label: "Salary Tier",
       value: salaryTier ? formatCurrency(salaryTier.monthlySalary) : "--",
       icon: Award,
@@ -106,7 +117,7 @@ function DashboardHome() {
         </div>
       </div>
 
-      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
         {stats.map((stat, idx) => (
           <Card
             key={stat.label}
