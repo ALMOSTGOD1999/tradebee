@@ -30,6 +30,8 @@ export const users = pgTable("users", {
   activationPackage: varchar("activation_package", { length: 10 }), // "5000" or "10000" or null (free/admin-activated)
   paymentProof: text("payment_proof"), // base64 or URL of payment screenshot
   activationStatus: varchar("activation_status", { length: 10 }), // "pending", "approved", "rejected" or null (admin-activated)
+  // Balance field for bonuses/income
+  balance: numeric("balance", { precision: 15, scale: 2 }).notNull().default("0"),
 });
 
 export const payouts = pgTable("payouts", {

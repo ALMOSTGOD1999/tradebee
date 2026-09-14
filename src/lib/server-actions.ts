@@ -848,6 +848,28 @@ export const approveActivation = createServerFn({ method: "POST" })
       activationStatus: "approved",
     }).where(eq(users.id, data.userId));
 
+    // 5% joining bonus to direct parent if user activated with a package
+    if (found.activationPackage && found.parentId) {
+      const pkgAmount = Number(found.activationPackage);
+      const bonus = Math.round(pkgAmount * 0.05);
+
+      // Credit parent's balance
+      await db.update(users).set({
+        balance: sql`cast(${users.balance} as numeric) + ${bonus}`,
+      }).where(eq(users.id, found.parentId));
+
+      // Record payout
+      const payoutId = "JB" + Date.now().toString(36).toUpperCase().slice(-6) + Math.random().toString(36).slice(2, 5).toUpperCase();
+      await db.insert(payouts).values({
+        id: payoutId,
+        userId: found.parentId,
+        type: "joining_bonus",
+        amount: String(bonus),
+        referenceId: found.id,
+        month: new Date().toISOString().slice(0, 7),
+      });
+    }
+
     return { success: true, message: `Account ${data.userId} activated successfully` };
   });
 

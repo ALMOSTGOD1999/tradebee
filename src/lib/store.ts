@@ -20,6 +20,7 @@ export interface User {
   activationPackage: string | null;
   paymentProof: string | null;
   activationStatus: string | null;
+  balance: string | number;
 }
 
 export type InvestmentTier =

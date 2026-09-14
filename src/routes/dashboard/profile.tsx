@@ -172,6 +172,10 @@ function ProfilePage() {
                 {user.isActive && user.activationPackage ? `Active (₹${Number(user.activationPackage).toLocaleString("en-IN")})` : user.isActive ? "Active (Free)" : "Inactive"}
               </span>
             </div>
+            <div className="flex justify-between py-3 hover:bg-stone-50/50 px-2 -mx-2 rounded-lg transition-colors">
+              <span className="text-stone-500 flex items-center gap-2 text-sm"><IndianRupee className="h-4 w-4" /> Balance</span>
+              <span className="font-bold text-sm text-emerald-600">{formatCurrency(Number(user.balance) || 0)}</span>
+            </div>
           </div>
         </CardContent>
       </Card>

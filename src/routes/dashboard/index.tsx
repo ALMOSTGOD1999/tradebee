@@ -7,7 +7,7 @@ import { getInvestmentTier, calculateDirectReferralBonus, calculateLevelBonus, c
 import { getDirectReferrals, getGenealogyTree } from "../../lib/server-actions";
 import type { User } from "../../lib/store";
 import { Button } from "../../components/ui/button";
-import { Users, TrendingUp, Wallet, Award, ArrowUpRight, ChevronRight, Zap, Star, ArrowRight } from "lucide-react";
+import { Users, TrendingUp, Wallet, Award, ArrowUpRight, ChevronRight, Zap, Star, ArrowRight, IndianRupee } from "lucide-react";
 
 export const Route = createFileRoute("/dashboard/")({
   component: DashboardHome,
@@ -75,6 +75,17 @@ function DashboardHome() {
       trend: investment > 0 ? "+12%" : null,
     },
     {
+      label: "Balance",
+      value: formatCurrency(Number(user.balance) || 0),
+      icon: IndianRupee,
+      gradient: "from-emerald-400 to-green-500",
+      shadowColor: "shadow-green-500/20",
+      bgLight: "bg-emerald-50",
+      textColor: "text-emerald-600",
+      detail: "Joining bonuses earned",
+      trend: null,
+    },
+    {
       label: "Direct Referrals",
       value: directReferrals.length.toString(),
       icon: Users,
@@ -136,7 +147,7 @@ function DashboardHome() {
         </div>
       </div>
 
-      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
         {stats.map((stat, idx) => (
           <Card
             key={stat.label}
