@@ -75,7 +75,7 @@ function DashboardHome() {
       trend: investment > 0 ? "+12%" : null,
     },
     {
-      label: "Balance",
+      label: "Joining Reward Wallet",
       value: formatCurrency(Number(user.balance) || 0),
       icon: IndianRupee,
       gradient: "from-emerald-400 to-green-500",
