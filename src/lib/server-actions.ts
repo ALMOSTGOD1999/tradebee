@@ -889,22 +889,45 @@ export const rejectActivation = createServerFn({ method: "POST" })
   });
 
 export const adminDirectActivate = createServerFn({ method: "POST" })
-  .validator((data: { userId: string }) => data)
+  .validator((data: { userId: string; package?: string | null }) => data)
   .handler(async ({ data }) => {
     const user = await db.select().from(users).where(eq(users.id, data.userId));
     const [found] = user;
     if (!found) return { success: false, message: "User not found" };
     if (found.role === "admin") return { success: false, message: "Cannot activate admin" };
 
-    // Free/admin activation — no package, no payment proof
+    // Admin selects a package for the user (no payment proof needed)
+    const selectedPackage = data.package || null;
+
     await db.update(users).set({
       isActive: true,
-      activationPackage: null,
+      activationPackage: selectedPackage,
       paymentProof: null,
-      activationStatus: null,
+      activationStatus: "approved",
     }).where(eq(users.id, data.userId));
 
-    return { success: true, message: `Account ${data.userId} activated (free/admin)` };
+    // 5% joining bonus to direct parent if a package was selected
+    if (selectedPackage && found.parentId) {
+      const pkgAmount = Number(selectedPackage);
+      const bonus = Math.round(pkgAmount * 0.05);
+
+      await db.update(users).set({
+        balance: sql`cast(${users.balance} as numeric) + ${bonus}`,
+      }).where(eq(users.id, found.parentId));
+
+      const payoutId = "JB" + Date.now().toString(36).toUpperCase().slice(-6) + Math.random().toString(36).slice(2, 5).toUpperCase();
+      await db.insert(payouts).values({
+        id: payoutId,
+        userId: found.parentId,
+        type: "joining_bonus",
+        amount: String(bonus),
+        referenceId: found.id,
+        month: new Date().toISOString().slice(0, 7),
+      });
+    }
+
+    const pkgLabel = selectedPackage ? ` with ₹${Number(selectedPackage).toLocaleString("en-IN")} package` : "";
+    return { success: true, message: `Account ${data.userId} activated${pkgLabel}` };
   });
 
 export const getActivationStatus = createServerFn({ method: "GET" })

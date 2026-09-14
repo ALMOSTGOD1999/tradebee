@@ -17,6 +17,7 @@ import { Route as IncomeRouteImport } from './routes/income'
 import { Route as PlansRouteImport } from './routes/plans'
 import { Route as RewardsRouteImport } from './routes/rewards'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
+import { Route as DashboardActivationRouteImport } from './routes/dashboard/activation'
 import { Route as DashboardAddUserRouteImport } from './routes/dashboard/add-user'
 import { Route as DashboardGenealogyRouteImport } from './routes/dashboard/genealogy'
 import { Route as DashboardInvestmentRouteImport } from './routes/dashboard/investment'
@@ -24,9 +25,8 @@ import { Route as DashboardLevelsRouteImport } from './routes/dashboard/levels'
 import { Route as DashboardProfileRouteImport } from './routes/dashboard/profile'
 import { Route as DashboardReferralsRouteImport } from './routes/dashboard/referrals'
 import { Route as DashboardTeamRouteImport } from './routes/dashboard/team'
-import { Route as DashboardActivationRouteImport } from './routes/dashboard/activation'
-import { Route as DashboardAdminAllUsersRouteImport } from './routes/dashboard/admin/all-users'
 import { Route as DashboardAdminActivationRequestsRouteImport } from './routes/dashboard/admin/activation-requests'
+import { Route as DashboardAdminAllUsersRouteImport } from './routes/dashboard/admin/all-users'
 import { Route as DashboardAdminCreateUserRouteImport } from './routes/dashboard/admin/create-user'
 import { Route as DashboardAdminEditUserUserIdRouteImport } from './routes/dashboard/admin/edit-user/$userId'
 
@@ -70,6 +70,11 @@ const DashboardIndexRoute = DashboardIndexRouteImport.update({
   path: '/',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardActivationRoute = DashboardActivationRouteImport.update({
+  id: '/activation',
+  path: '/activation',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const DashboardAddUserRoute = DashboardAddUserRouteImport.update({
   id: '/add-user',
   path: '/add-user',
@@ -105,19 +110,15 @@ const DashboardTeamRoute = DashboardTeamRouteImport.update({
   path: '/team',
   getParentRoute: () => DashboardRoute,
 } as any)
-const DashboardActivationRoute = DashboardActivationRouteImport.update({
-  id: '/activation',
-  path: '/activation',
-  getParentRoute: () => DashboardRoute,
-} as any)
+const DashboardAdminActivationRequestsRoute =
+  DashboardAdminActivationRequestsRouteImport.update({
+    id: '/admin/activation-requests',
+    path: '/admin/activation-requests',
+    getParentRoute: () => DashboardRoute,
+  } as any)
 const DashboardAdminAllUsersRoute = DashboardAdminAllUsersRouteImport.update({
   id: '/admin/all-users',
   path: '/admin/all-users',
-  getParentRoute: () => DashboardRoute,
-} as any)
-const DashboardAdminActivationRequestsRoute = DashboardAdminActivationRequestsRouteImport.update({
-  id: '/admin/activation-requests',
-  path: '/admin/activation-requests',
   getParentRoute: () => DashboardRoute,
 } as any)
 const DashboardAdminCreateUserRoute =
@@ -141,6 +142,7 @@ export interface FileRoutesByFullPath {
   '/income': typeof IncomeRoute
   '/plans': typeof PlansRoute
   '/rewards': typeof RewardsRoute
+  '/dashboard/activation': typeof DashboardActivationRoute
   '/dashboard/add-user': typeof DashboardAddUserRoute
   '/dashboard/genealogy': typeof DashboardGenealogyRoute
   '/dashboard/investment': typeof DashboardInvestmentRoute
@@ -149,11 +151,10 @@ export interface FileRoutesByFullPath {
   '/dashboard/referrals': typeof DashboardReferralsRoute
   '/dashboard/team': typeof DashboardTeamRoute
   '/dashboard/': typeof DashboardIndexRoute
-  '/dashboard/admin/all-users': typeof DashboardAdminAllUsersRoute
   '/dashboard/admin/activation-requests': typeof DashboardAdminActivationRequestsRoute
+  '/dashboard/admin/all-users': typeof DashboardAdminAllUsersRoute
   '/dashboard/admin/create-user': typeof DashboardAdminCreateUserRoute
   '/dashboard/admin/edit-user/$userId': typeof DashboardAdminEditUserUserIdRoute
-  '/dashboard/activation': typeof DashboardActivationRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -162,6 +163,7 @@ export interface FileRoutesByTo {
   '/income': typeof IncomeRoute
   '/plans': typeof PlansRoute
   '/rewards': typeof RewardsRoute
+  '/dashboard/activation': typeof DashboardActivationRoute
   '/dashboard/add-user': typeof DashboardAddUserRoute
   '/dashboard/genealogy': typeof DashboardGenealogyRoute
   '/dashboard/investment': typeof DashboardInvestmentRoute
@@ -170,11 +172,10 @@ export interface FileRoutesByTo {
   '/dashboard/referrals': typeof DashboardReferralsRoute
   '/dashboard/team': typeof DashboardTeamRoute
   '/dashboard': typeof DashboardIndexRoute
-  '/dashboard/admin/all-users': typeof DashboardAdminAllUsersRoute
   '/dashboard/admin/activation-requests': typeof DashboardAdminActivationRequestsRoute
+  '/dashboard/admin/all-users': typeof DashboardAdminAllUsersRoute
   '/dashboard/admin/create-user': typeof DashboardAdminCreateUserRoute
   '/dashboard/admin/edit-user/$userId': typeof DashboardAdminEditUserUserIdRoute
-  '/dashboard/activation': typeof DashboardActivationRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -185,6 +186,7 @@ export interface FileRoutesById {
   '/income': typeof IncomeRoute
   '/plans': typeof PlansRoute
   '/rewards': typeof RewardsRoute
+  '/dashboard/activation': typeof DashboardActivationRoute
   '/dashboard/add-user': typeof DashboardAddUserRoute
   '/dashboard/genealogy': typeof DashboardGenealogyRoute
   '/dashboard/investment': typeof DashboardInvestmentRoute
@@ -193,11 +195,10 @@ export interface FileRoutesById {
   '/dashboard/referrals': typeof DashboardReferralsRoute
   '/dashboard/team': typeof DashboardTeamRoute
   '/dashboard/': typeof DashboardIndexRoute
-  '/dashboard/admin/all-users': typeof DashboardAdminAllUsersRoute
   '/dashboard/admin/activation-requests': typeof DashboardAdminActivationRequestsRoute
+  '/dashboard/admin/all-users': typeof DashboardAdminAllUsersRoute
   '/dashboard/admin/create-user': typeof DashboardAdminCreateUserRoute
   '/dashboard/admin/edit-user/$userId': typeof DashboardAdminEditUserUserIdRoute
-  '/dashboard/activation': typeof DashboardActivationRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -209,6 +210,7 @@ export interface FileRouteTypes {
     | '/income'
     | '/plans'
     | '/rewards'
+    | '/dashboard/activation'
     | '/dashboard/add-user'
     | '/dashboard/genealogy'
     | '/dashboard/investment'
@@ -217,11 +219,10 @@ export interface FileRouteTypes {
     | '/dashboard/referrals'
     | '/dashboard/team'
     | '/dashboard/'
-    | '/dashboard/admin/all-users'
     | '/dashboard/admin/activation-requests'
+    | '/dashboard/admin/all-users'
     | '/dashboard/admin/create-user'
     | '/dashboard/admin/edit-user/$userId'
-    | '/dashboard/activation'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -230,6 +231,7 @@ export interface FileRouteTypes {
     | '/income'
     | '/plans'
     | '/rewards'
+    | '/dashboard/activation'
     | '/dashboard/add-user'
     | '/dashboard/genealogy'
     | '/dashboard/investment'
@@ -238,11 +240,10 @@ export interface FileRouteTypes {
     | '/dashboard/referrals'
     | '/dashboard/team'
     | '/dashboard'
-    | '/dashboard/admin/all-users'
     | '/dashboard/admin/activation-requests'
+    | '/dashboard/admin/all-users'
     | '/dashboard/admin/create-user'
     | '/dashboard/admin/edit-user/$userId'
-    | '/dashboard/activation'
   id:
     | '__root__'
     | '/'
@@ -252,6 +253,7 @@ export interface FileRouteTypes {
     | '/income'
     | '/plans'
     | '/rewards'
+    | '/dashboard/activation'
     | '/dashboard/add-user'
     | '/dashboard/genealogy'
     | '/dashboard/investment'
@@ -260,11 +262,10 @@ export interface FileRouteTypes {
     | '/dashboard/referrals'
     | '/dashboard/team'
     | '/dashboard/'
-    | '/dashboard/admin/all-users'
     | '/dashboard/admin/activation-requests'
+    | '/dashboard/admin/all-users'
     | '/dashboard/admin/create-user'
     | '/dashboard/admin/edit-user/$userId'
-    | '/dashboard/activation'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -335,6 +336,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardIndexRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/activation': {
+      id: '/dashboard/activation'
+      path: '/activation'
+      fullPath: '/dashboard/activation'
+      preLoaderRoute: typeof DashboardActivationRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/dashboard/add-user': {
       id: '/dashboard/add-user'
       path: '/add-user'
@@ -384,18 +392,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardTeamRouteImport
       parentRoute: typeof DashboardRoute
     }
-    '/dashboard/admin/all-users': {
-      id: '/dashboard/admin/all-users'
-      path: '/admin/all-users'
-      fullPath: '/dashboard/admin/all-users'
-      preLoaderRoute: typeof DashboardAdminAllUsersRouteImport
-      parentRoute: typeof DashboardRoute
-    }
     '/dashboard/admin/activation-requests': {
       id: '/dashboard/admin/activation-requests'
       path: '/admin/activation-requests'
       fullPath: '/dashboard/admin/activation-requests'
       preLoaderRoute: typeof DashboardAdminActivationRequestsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/admin/all-users': {
+      id: '/dashboard/admin/all-users'
+      path: '/admin/all-users'
+      fullPath: '/dashboard/admin/all-users'
+      preLoaderRoute: typeof DashboardAdminAllUsersRouteImport
       parentRoute: typeof DashboardRoute
     }
     '/dashboard/admin/create-user': {
@@ -412,13 +420,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardAdminEditUserUserIdRouteImport
       parentRoute: typeof DashboardRoute
     }
-    '/dashboard/activation': {
-      id: '/dashboard/activation'
-      path: '/activation'
-      fullPath: '/dashboard/activation'
-      preLoaderRoute: typeof DashboardActivationRouteImport
-      parentRoute: typeof DashboardRoute
-    }
   }
 }
 
@@ -432,8 +433,8 @@ interface DashboardRouteChildren {
   DashboardReferralsRoute: typeof DashboardReferralsRoute
   DashboardTeamRoute: typeof DashboardTeamRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
-  DashboardAdminAllUsersRoute: typeof DashboardAdminAllUsersRoute
   DashboardAdminActivationRequestsRoute: typeof DashboardAdminActivationRequestsRoute
+  DashboardAdminAllUsersRoute: typeof DashboardAdminAllUsersRoute
   DashboardAdminCreateUserRoute: typeof DashboardAdminCreateUserRoute
   DashboardAdminEditUserUserIdRoute: typeof DashboardAdminEditUserUserIdRoute
 }
@@ -448,8 +449,8 @@ const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardReferralsRoute: DashboardReferralsRoute,
   DashboardTeamRoute: DashboardTeamRoute,
   DashboardIndexRoute: DashboardIndexRoute,
-  DashboardAdminAllUsersRoute: DashboardAdminAllUsersRoute,
   DashboardAdminActivationRequestsRoute: DashboardAdminActivationRequestsRoute,
+  DashboardAdminAllUsersRoute: DashboardAdminAllUsersRoute,
   DashboardAdminCreateUserRoute: DashboardAdminCreateUserRoute,
   DashboardAdminEditUserUserIdRoute: DashboardAdminEditUserUserIdRoute,
 }
