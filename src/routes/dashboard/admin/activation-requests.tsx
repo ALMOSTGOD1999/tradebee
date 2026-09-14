@@ -117,10 +117,6 @@ function ActivationRequestsPage() {
       toast.error("Select a user first");
       return;
     }
-    if (!selectedPackage) {
-      toast.error("Select a package first");
-      return;
-    }
     setActivating(true);
     const result = await adminDirectActivate({
       data: { userId: selectedUser.id, package: selectedPackage },
@@ -262,7 +258,29 @@ function ActivationRequestsPage() {
               <p className="text-slate-300 text-sm font-semibold mb-3">
                 Select Package:
               </p>
-              <div className="grid gap-3 sm:grid-cols-2">
+              <div className="grid gap-3 sm:grid-cols-3">
+                {/* Free option */}
+                <button
+                  onClick={() => setSelectedPackage(null)}
+                  className={cn(
+                    "p-4 rounded-xl border-2 text-left transition-all",
+                    selectedPackage === null && document.activeElement?.closest('[data-selected="true"]')
+                      ? "border-amber-400 bg-amber-400/10 ring-1 ring-amber-400/30"
+                      : "border-slate-600 bg-white/5 hover:border-slate-500"
+                  )}
+                >
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="font-bold text-white">Free</p>
+                      <p className="text-slate-400 text-xs">
+                        No payment required
+                      </p>
+                    </div>
+                    <span className="text-emerald-400 font-bold text-lg">
+                      ₹0
+                    </span>
+                  </div>
+                </button>
                 {ACTIVATION_PACKAGES.map((pkg) => (
                   <button
                     key={pkg.id}
@@ -293,12 +311,14 @@ function ActivationRequestsPage() {
             {/* Activate button */}
             <button
               onClick={handleAdminActivate}
-              disabled={activating || !selectedPackage}
+              disabled={activating}
               className="w-full py-3 bg-gradient-to-r from-emerald-500 to-green-500 text-white font-bold rounded-xl shadow-lg shadow-emerald-500/25 hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {activating
                 ? "Activating..."
-                : `Activate with ${selectedPackage ? ACTIVATION_PACKAGES.find((p) => p.id === selectedPackage)?.label : "Package"}`}
+                : selectedPackage
+                  ? `Activate with ${ACTIVATION_PACKAGES.find((p) => p.id === selectedPackage)?.label}`
+                  : "Activate Free (No Package)"}
             </button>
           </div>
         )}

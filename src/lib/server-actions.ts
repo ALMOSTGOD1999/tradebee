@@ -750,6 +750,7 @@ interface GenealogyNode {
   investment: number;
   tier: string | null;
   depth: number;
+  isActive: boolean;
   children: GenealogyNode[];
 }
 
@@ -771,6 +772,7 @@ export const getGenealogyTree = createServerFn({ method: "GET" })
         investment: Number(user.investment) || 0,
         tier: user.investmentTier,
         depth,
+        isActive: user.isActive,
         children,
       };
     }

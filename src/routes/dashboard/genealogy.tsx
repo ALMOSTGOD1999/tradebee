@@ -9,7 +9,7 @@ import { cn } from "../../lib/utils";
 export const Route = createFileRoute("/dashboard/genealogy")({ component: GenealogyPage });
 
 interface TreeNode {
-  id: string; name: string; investment: number; tier: string | null; depth: number; children: TreeNode[];
+  id: string; name: string; investment: number; tier: string | null; depth: number; isActive: boolean; children: TreeNode[];
 }
 
 // ---- Tier-based avatar colors ----
@@ -68,7 +68,7 @@ function OrgCard({ node, expanded, onToggle }: {
 }) {
   const open = expanded.has(node.id);
   const hasKids = node.children.length > 0;
-  const active = node.investment > 0;
+  const active = node.isActive;
   const isRoot = node.depth === 0;
 
   return (

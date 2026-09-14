@@ -22,7 +22,8 @@ function countTree(tree: any): TreeInfo {
       info.members++;
       info.allNodes.push({ id: n.id, investment: n.investment });
     }
-    if (n.investment > 0) { info.active++; info.invest += n.investment; }
+    if (n.isActive) { info.active++; }
+    if (n.investment > 0) { info.invest += n.investment; }
     if (n.depth > info.depth) info.depth = n.depth;
     n.children.forEach(walk);
   })(tree);
