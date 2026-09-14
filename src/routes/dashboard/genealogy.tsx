@@ -94,13 +94,20 @@ function OrgCard({ node, expanded, onToggle }: {
         )}
 
         <div className="p-3 flex flex-col items-center text-center">
-          {/* Avatar circle with initials */}
-          <div className={cn(
-            "relative w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-md mb-2 transition-transform duration-300 group-hover:scale-110",
-            active ? getAvatarColor(node.tier) : "bg-slate-300"
-          )}>
-            {getInitials(node.name)}
-            {active && <div className="absolute inset-0 rounded-full ring-2 ring-emerald-300/50 animate-ping opacity-30" />}
+          {/* Avatar circle with initials + status dot */}
+          <div className="relative mb-2">
+            <div className={cn(
+              "w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-md transition-transform duration-300 group-hover:scale-110",
+              active ? getAvatarColor(node.tier) : "bg-slate-300"
+            )}>
+              {getInitials(node.name)}
+              {active && <div className="absolute inset-0 rounded-full ring-2 ring-emerald-300/50 animate-ping opacity-30" />}
+            </div>
+            {/* Green/Red status dot */}
+            <div className={cn(
+              "absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full border-2 border-white shadow-sm",
+              active ? "bg-emerald-500" : "bg-red-500"
+            )} />
           </div>
 
           {/* Name */}
