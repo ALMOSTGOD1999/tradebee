@@ -1,11 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useAuth } from "../../lib/auth";
-import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
-import { Badge } from "../../components/ui/badge";
 import { getGenealogyTree } from "../../lib/server-actions";
 import { formatCurrency } from "../../lib/store";
-import { ChevronDown, User as UserIcon, Users, TreePine, TrendingUp, Layers, Sparkles, RotateCcw, ZoomIn, ZoomOut, Minus } from "lucide-react";
+import { Users, TreePine, TrendingUp, Layers, RotateCcw, ZoomIn, ZoomOut, Plus, Minus } from "lucide-react";
 import { cn } from "../../lib/utils";
 
 export const Route = createFileRoute("/dashboard/genealogy")({ component: GenealogyPage });
@@ -14,19 +12,31 @@ interface TreeNode {
   id: string; name: string; investment: number; tier: string | null; depth: number; children: TreeNode[];
 }
 
-const TIER_STYLES: Record<string, { gradient: string; badge: string }> = {
-  Bronze: { gradient: "from-amber-400 to-orange-400", badge: "bg-amber-50 text-amber-600 border-amber-200" },
-  Silver: { gradient: "from-slate-400 to-slate-500", badge: "bg-slate-50 text-slate-600 border-slate-300" },
-  Gold: { gradient: "from-yellow-400 to-amber-500", badge: "bg-yellow-50 text-yellow-600 border-yellow-300" },
-  Platinum: { gradient: "from-violet-400 to-purple-400", badge: "bg-violet-50 text-violet-600 border-violet-200" },
-  Diamond: { gradient: "from-cyan-400 to-blue-400", badge: "bg-cyan-50 text-cyan-600 border-cyan-200" },
+// ---- Tier-based avatar colors ----
+const TIER_AVATAR: Record<string, string> = {
+  Bronze: "bg-amber-500",
+  Silver: "bg-slate-500",
+  Gold: "bg-yellow-500",
+  Platinum: "bg-violet-500",
+  Diamond: "bg-blue-500",
 };
-function getTierStyle(tier: string | null) { return tier && TIER_STYLES[tier] ? TIER_STYLES[tier] : { gradient: "from-stone-400 to-stone-500", badge: "bg-stone-100 text-stone-600 border-stone-200" }; }
+function getAvatarColor(tier: string | null) {
+  return tier && TIER_AVATAR[tier] ? TIER_AVATAR[tier] : "bg-sky-500";
+}
 
-// ---- Animated expand wrapper ----
-function TreeBranch({ open, count, children }: { open: boolean; count: number; children: React.ReactNode }) {
+function getInitials(name: string) {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return "??";
+  const first = parts[0]?.[0] ?? "";
+  const last = parts.length >= 2 ? (parts[parts.length - 1]?.[0] ?? "") : "";
+  if (first && last) return (first + last).toUpperCase();
+  return (first + (parts[0]?.[1] ?? "")).toUpperCase();
+}
+
+// ---- Animated expand/collapse wrapper ----
+function TreeBranch({ open, children }: { open: boolean; children: React.ReactNode }) {
   const ref = useRef<HTMLDivElement>(null);
-  const [h, setH] = useState(0);
+  const [h, setH] = useState<number | "auto">(0);
   const [show, setShow] = useState(open);
 
   useEffect(() => { if (open) setShow(true); }, [open]);
@@ -34,170 +44,147 @@ function TreeBranch({ open, count, children }: { open: boolean; count: number; c
   useEffect(() => {
     if (!ref.current) return;
     if (open) {
-      setH(ref.current.scrollHeight);
-      const t = setTimeout(() => setH(0), 50);
-      const t2 = setTimeout(() => setH(ref.current?.scrollHeight ?? 0), 60);
-      const t3 = setTimeout(() => setH(0), 300);
-      return () => { clearTimeout(t); clearTimeout(t2); clearTimeout(t3); };
-    } else {
       setH(0);
+      requestAnimationFrame(() => {
+        setH(ref.current?.scrollHeight ?? 0);
+        setTimeout(() => setH("auto"), 400);
+      });
+    } else {
+      setH(ref.current.scrollHeight);
+      requestAnimationFrame(() => setH(0));
     }
-  }, [open, show]);
+  }, [open]);
 
   return (
-    <div style={{ height: h === 0 ? "auto" : h + "px", overflow: "hidden" }}
-      className="transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]">
+    <div style={{ maxHeight: h === "auto" ? undefined : h + "px", overflow: "hidden", transition: "max-height 0.4s cubic-bezier(0.34,1.56,0.64,1)" }}>
       <div ref={ref}>{show && children}</div>
     </div>
   );
 }
 
-// ---- Single node with real tree lines ----
-function TreeNode({ node, expanded, onToggle, siblingCount, siblingIndex }: {
+// ---- Org-chart card for a single node ----
+function OrgCard({ node, expanded, onToggle }: {
   node: TreeNode; expanded: Set<string>; onToggle: (id: string) => void;
-  siblingCount: number; siblingIndex: number;
 }) {
   const open = expanded.has(node.id);
   const hasKids = node.children.length > 0;
   const active = node.investment > 0;
-  const ts = getTierStyle(node.tier);
   const isRoot = node.depth === 0;
-  const isLast = siblingIndex === siblingCount - 1;
 
   return (
-    <div className="relative pl-0">
-      {/* Vertical trunk line from parent (not for root) */}
-      {!isRoot && (
-        <div className="absolute left-4 top-0 h-full" style={{ width: "2px" }}>
-          <div className={cn("w-full h-full", isLast ? "bg-gradient-to-b from-stone-300 via-stone-300 to-transparent" : "bg-stone-300")} />
-        </div>
-      )}
-
-      {/* Horizontal branch + node card */}
-      <div className="relative flex items-stretch">
-        {/* Horizontal connector line */}
-        {!isRoot && (
-          <div className="relative flex-shrink-0" style={{ width: "40px" }}>
-            <div className="absolute top-7 left-4 w-[calc(100%-16px)] h-[2px] bg-stone-300" />
-            <div className="absolute top-[26px] left-4 w-2 h-2 rounded-full bg-stone-300 ring-2 ring-white -ml-0.5" />
+    <div className="flex flex-col items-center">
+      {/* The card */}
+      <div
+        onClick={() => onToggle(node.id)}
+        className={cn(
+          "relative w-[160px] sm:w-[180px] rounded-2xl border cursor-pointer select-none transition-all duration-300 group",
+          "hover:shadow-xl hover:-translate-y-1 active:scale-[0.97]",
+          isRoot
+            ? "bg-white border-sky-200 shadow-lg shadow-sky-200/40 ring-2 ring-sky-100"
+            : "bg-white border-slate-200 shadow-md hover:border-sky-300 hover:shadow-sky-100/40"
+        )}
+      >
+        {/* Sponsored ribbon */}
+        {node.tier && (
+          <div className="absolute -top-1 -right-1 z-10">
+            <div className="bg-red-500 text-white text-[7px] font-bold px-2 py-0.5 rounded-bl-lg rounded-tr-xl shadow-sm rotate-0">
+              {node.tier}
+            </div>
           </div>
         )}
 
-        <div className="flex-1 min-w-0">
-          {/* The clickable card */}
-          <div
-            onClick={() => onToggle(node.id)}
-            className={cn(
-              "relative flex items-center gap-3 p-3 rounded-2xl border cursor-pointer select-none transition-all duration-300",
-              "hover:shadow-xl hover:-translate-y-0.5 active:scale-[0.98]",
-              isRoot
-                ? "bg-gradient-to-br from-amber-50 via-orange-50/40 to-amber-50 border-amber-200 shadow-lg shadow-amber-500/10 ring-1 ring-amber-100/60"
-                : active
-                  ? "bg-white border-amber-200/50 hover:border-amber-300 hover:shadow-amber-500/15 shadow-md"
-                  : "bg-white/80 border-stone-200/50 hover:border-stone-300 hover:shadow-stone-200/30 shadow-sm"
-            )}
-          >
-            {/* Expand/collapse button */}
-            <div className={cn(
-              "flex-shrink-0 w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-300",
-              hasKids ? (
-                open
-                  ? "bg-gradient-to-br from-amber-400 to-orange-400 text-white shadow-md shadow-amber-300/30 rotate-0"
-                  : "bg-stone-100 text-stone-400 group-hover:bg-amber-50 group-hover:text-amber-500 hover:rotate-90"
-              ) : "bg-stone-50 text-stone-300"
-            )}>
-              {hasKids ? (
-                <ChevronDown className={cn("h-4 w-4 transition-transform duration-300", !open && "-rotate-90")} />
-              ) : (
-                <Minus className="h-3 w-3" />
-              )}
-            </div>
-
-            {/* Avatar */}
-            <div className={cn(
-              "relative w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 transition-all duration-500",
-              "hover:scale-110 hover:rotate-3",
-              isRoot
-                ? "bg-gradient-to-br from-amber-400 via-orange-400 to-amber-500 text-white ring-3 ring-amber-200 shadow-lg shadow-amber-300/40"
-                : active
-                  ? cn("bg-gradient-to-br text-white shadow-lg", ts.gradient, "ring-2 ring-white shadow-black/10")
-                  : "bg-gradient-to-br from-stone-100 to-stone-200 text-stone-400 ring-2 ring-white"
-            )}>
-              {isRoot ? (
-                <Sparkles className="h-5 w-5" />
-              ) : (
-                <UserIcon className="h-5 w-5" />
-              )}
-              {/* Active glow ring */}
-              {active && (
-                <div className="absolute inset-0 rounded-2xl ring-2 ring-emerald-300/50 animate-ping opacity-20" />
-              )}
-            </div>
-
-            {/* Info */}
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-1.5 flex-wrap">
-                <span className="font-mono text-[10px] font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-lg border border-amber-100">{node.id}</span>
-                {isRoot && <Badge variant="outline" className="text-[9px] border-amber-300 text-amber-700 bg-amber-100/50">You</Badge>}
-                {node.tier && <Badge variant="outline" className={cn("text-[9px]", ts.badge)}>{node.tier}</Badge>}
-              </div>
-              <p className="font-bold text-sm text-stone-800 mt-0.5 truncate">{node.name}</p>
-              <div className="flex items-center gap-2 mt-1">
-                {active ? (
-                  <span className="text-[11px] font-semibold text-emerald-600 flex items-center gap-1 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100">
-                    <TrendingUp className="h-3 w-3" />{formatCurrency(node.investment)}
-                  </span>
-                ) : <span className="text-[11px] text-stone-400 italic">No investment</span>}
-                {hasKids && (
-                  <span className="text-[11px] font-medium text-stone-500 flex items-center gap-1 bg-stone-100 px-2 py-0.5 rounded-full">
-                    <Users className="h-3 w-3" />{node.children.length} direct
-                  </span>
-                )}
-              </div>
-            </div>
-
-            {/* Status dot */}
-            <div className="relative flex-shrink-0 w-3 h-3">
-              <div className={cn("w-3 h-3 rounded-full", active ? "bg-emerald-400 shadow-sm shadow-emerald-300" : "bg-stone-300")} />
-              {active && <div className="absolute inset-0 w-3 h-3 rounded-full bg-emerald-400 animate-ping opacity-40" />}
-            </div>
+        <div className="p-3 flex flex-col items-center text-center">
+          {/* Avatar circle with initials */}
+          <div className={cn(
+            "relative w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-md mb-2 transition-transform duration-300 group-hover:scale-110",
+            active ? getAvatarColor(node.tier) : "bg-slate-300"
+          )}>
+            {getInitials(node.name)}
+            {active && <div className="absolute inset-0 rounded-full ring-2 ring-emerald-300/50 animate-ping opacity-30" />}
           </div>
 
-          {/* Children branches - animate open */}
-          <TreeBranch open={open && hasKids} count={node.children.length}>
-            <div className="relative mt-1 ml-4 pb-1">
-              {/* Vertical trunk for children */}
-              <div className="absolute left-0 top-0 bottom-2 w-[2px] bg-gradient-to-b from-stone-300 via-stone-200 to-stone-100 rounded-full" />
+          {/* Name */}
+          <p className="font-bold text-xs text-slate-800 leading-tight truncate w-full">{node.name}</p>
 
-              {node.children.map((child, i) => (
-                <div
-                  key={child.id}
-                  className="tree-child-animate"
+          {/* ID */}
+          <p className="text-[10px] text-slate-400 font-mono mt-0.5">{node.id}</p>
+
+          {/* Active / Inactive + Level */}
+          <div className="flex items-center gap-1.5 mt-1.5">
+            <span className={cn(
+              "text-[9px] font-semibold px-2 py-0.5 rounded-full",
+              active ? "bg-emerald-100 text-emerald-700" : "bg-red-100 text-red-600"
+            )}>
+              {active ? "Active" : "Inactive"}
+            </span>
+            <span className="text-[9px] text-slate-400 font-medium">Lvl {node.depth}</span>
+          </div>
+
+          {/* Investment & Income row */}
+          <div className="flex items-center justify-between w-full mt-2 pt-2 border-t border-slate-100">
+            <div className="flex-1 text-center">
+              <p className="text-[8px] text-slate-400 uppercase font-semibold tracking-wider">Investment</p>
+              <p className={cn("text-[11px] font-bold", active ? "text-sky-600" : "text-slate-400")}>{formatCurrency(node.investment)}</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Expand/collapse button at bottom center */}
+        {hasKids && (
+          <div
+            className="absolute -bottom-3 left-1/2 -translate-x-1/2 z-10"
+            onClick={(e) => { e.stopPropagation(); onToggle(node.id); }}
+          >
+            <div className={cn(
+              "w-6 h-6 rounded-full border-2 flex items-center justify-center shadow-md transition-all duration-300",
+              open
+                ? "bg-sky-500 border-sky-500 text-white"
+                : "bg-white border-slate-300 text-slate-500 hover:border-sky-400 hover:text-sky-500"
+            )}>
+              {open ? <Minus className="h-3 w-3" /> : <Plus className="h-3 w-3" />}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Children connector lines + subtree */}
+      {hasKids && (
+        <TreeBranch open={open}>
+          <div className="flex flex-col items-center pt-4">
+            {/* Vertical line down from parent */}
+            <div className="w-[2px] h-4 bg-slate-300" />
+
+            {/* Horizontal connector bar */}
+            {node.children.length > 1 && (
+              <div className="relative w-full">
+                <div className="absolute top-0 left-1/2 right-auto h-[2px] bg-slate-300"
                   style={{
-                    animationDelay: (i * 80) + "ms",
-                    "--branch-index": i,
-                  } as React.CSSProperties}
-                >
-                  {/* Horizontal connector from trunk to child */}
-                  <div className="relative h-0" style={{ top: "28px" }}>
-                    <div className="absolute left-0 w-6 h-[2px] bg-stone-300" />
-                    <div className="absolute left-[22px] w-2 h-2 rounded-full bg-stone-300 -mt-[3px] ring-2 ring-white" />
-                  </div>
-                  <div className="ml-6">
-                    <TreeNode
-                      node={child}
-                      expanded={expanded}
-                      onToggle={onToggle}
-                      siblingCount={node.children.length}
-                      siblingIndex={i}
-                    />
+                    width: `calc(100% - ${100 / node.children.length}%)`,
+                    left: `${50 / node.children.length}%`,
+                  }}
+                />
+              </div>
+            )}
+
+            {/* Children cards */}
+            <div className="flex items-start justify-center gap-3 sm:gap-5 pt-0 flex-wrap">
+              {node.children.map((child) => (
+                <div key={child.id} className="flex flex-col items-center relative pt-0">
+                  {/* Vertical line from horizontal bar down to card */}
+                  <div className="w-[2px] h-4 bg-slate-300" />
+                  {/* Dot at junction */}
+                  <div className="w-2.5 h-2.5 rounded-full bg-slate-300 ring-2 ring-white -mt-[5px] z-[1]" />
+
+                  {/* Recursive child */}
+                  <div className="pt-1">
+                    <OrgCard node={child} expanded={expanded} onToggle={onToggle} />
                   </div>
                 </div>
               ))}
             </div>
-          </TreeBranch>
-        </div>
-      </div>
+          </div>
+        </TreeBranch>
+      )}
     </div>
   );
 }
@@ -208,17 +195,17 @@ function TreeStats({ tree }: { tree: TreeNode | null }) {
   let members = 0, active = 0, invest = 0, depth = 0;
   (function walk(n: TreeNode) { members++; if (n.investment > 0) { active++; invest += n.investment; } if (n.depth > depth) depth = n.depth; n.children.forEach(walk); })(tree);
   const s = [
-    { l: "Members", v: members, i: Users, c: "text-stone-500", bg: "from-stone-50 to-stone-100/50", bd: "border-stone-200/60" },
-    { l: "Active", v: active, i: TrendingUp, c: "text-emerald-500", bg: "from-emerald-50 to-green-50/30", bd: "border-emerald-200/60" },
-    { l: "Business", v: invest, i: TrendingUp, c: "text-amber-500", bg: "from-amber-50 to-orange-50/30", bd: "border-amber-200/60", cur: true },
-    { l: "Depth", v: depth, i: Layers, c: "text-blue-500", bg: "from-blue-50 to-indigo-50/30", bd: "border-blue-200/60" },
+    { l: "Members", v: members, i: Users, c: "text-sky-600", bg: "from-sky-50 to-blue-50", bd: "border-sky-200/60" },
+    { l: "Active", v: active, i: TrendingUp, c: "text-emerald-600", bg: "from-emerald-50 to-green-50/30", bd: "border-emerald-200/60" },
+    { l: "Business", v: invest, i: TrendingUp, c: "text-amber-600", bg: "from-amber-50 to-orange-50/30", bd: "border-amber-200/60", cur: true },
+    { l: "Depth", v: depth, i: Layers, c: "text-indigo-600", bg: "from-indigo-50 to-violet-50/30", bd: "border-indigo-200/60" },
   ];
   return (
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
       {s.map((x, i) => (
         <div key={x.l} className={cn("rounded-2xl border bg-gradient-to-br p-4 transition-all hover:shadow-lg hover:-translate-y-0.5 animate-fade-in-up", x.bg, x.bd)} style={{ animationDelay: i * 80 + "ms" }}>
           <div className={cn("flex items-center gap-1.5 mb-1", x.c)}><x.i className="h-3.5 w-3.5" /><span className="text-[10px] font-semibold uppercase tracking-wider">{x.l}</span></div>
-          <p className="text-2xl font-bold text-stone-800">{x.cur ? formatCurrency(x.v) : x.v.toLocaleString("en-IN")}</p>
+          <p className="text-2xl font-bold text-slate-800">{x.cur ? formatCurrency(x.v) : x.v.toLocaleString("en-IN")}</p>
         </div>
       ))}
     </div>
@@ -256,30 +243,30 @@ function GenealogyPage() {
   if (!user) return null;
 
   return (
-    <div className="space-y-6">
+    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-blue-50/60 to-indigo-50/40 -m-6 p-6">
       <style dangerouslySetInnerHTML={{ __html: [
-        "@keyframes branch-grow { from { opacity:0; transform: translateY(-12px) scaleY(0.6); } to { opacity:1; transform: translateY(0) scaleY(1); } }",
-        ".tree-child-animate { animation: branch-grow 0.45s cubic-bezier(0.34,1.56,0.64,1) both; transform-origin: top left; }",
-        "@keyframes node-pop { from { opacity:0; transform: scale(0.7); } to { opacity:1; transform: scale(1); } }",
-        ".tree-child-animate > div:last-child > div { animation: node-pop 0.35s cubic-bezier(0.34,1.56,0.64,1) both; }",
-        "@keyframes line-draw { from { width: 0; } to { width: 24px; } }",
+        "@keyframes fade-in-up { from { opacity:0; transform: translateY(10px); } to { opacity:1; transform: translateY(0); } }",
+        ".animate-fade-in-up { animation: fade-in-up 0.4s ease-out both; }",
+        "@keyframes fade-in-down { from { opacity:0; transform: translateY(-10px); } to { opacity:1; transform: translateY(0); } }",
+        ".animate-fade-in-down { animation: fade-in-down 0.35s ease-out both; }",
       ].join("\n") }} />
 
-      <div className="animate-fade-in-down flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      {/* Header */}
+      <div className="animate-fade-in-down flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5">
         <div className="flex items-center gap-3">
-          <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-400 flex items-center justify-center shadow-lg shadow-amber-200/50 animate-float">
+          <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-sky-400 to-blue-500 flex items-center justify-center shadow-lg shadow-sky-300/40">
             <TreePine className="h-5 w-5 text-white" />
           </div>
           <div>
-            <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-stone-800">Downline Tree</h2>
-            <p className="text-stone-500 text-sm mt-0.5">Click any node to expand its branches</p>
+            <h2 className="text-xl sm:text-2xl font-bold text-slate-800">Network Tree</h2>
+            <p className="text-slate-500 text-sm mt-0.5">Click any node to expand its branches</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <button onClick={expandAll} className="px-4 py-2 text-xs font-semibold text-stone-600 bg-white border border-stone-200 rounded-xl hover:bg-amber-50 hover:border-amber-300 hover:text-amber-600 transition-all active:scale-95 flex items-center gap-1.5 shadow-sm">
+          <button onClick={expandAll} className="px-4 py-2 text-xs font-semibold text-sky-700 bg-white border border-sky-200 rounded-xl hover:bg-sky-50 hover:border-sky-400 transition-all active:scale-95 flex items-center gap-1.5 shadow-sm">
             <ZoomIn className="h-3.5 w-3.5" /> Expand All
           </button>
-          <button onClick={collapseAll} className="px-4 py-2 text-xs font-semibold text-stone-600 bg-white border border-stone-200 rounded-xl hover:bg-stone-50 hover:border-stone-400 transition-all active:scale-95 flex items-center gap-1.5 shadow-sm">
+          <button onClick={collapseAll} className="px-4 py-2 text-xs font-semibold text-slate-600 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 hover:border-slate-400 transition-all active:scale-95 flex items-center gap-1.5 shadow-sm">
             <ZoomOut className="h-3.5 w-3.5" /> Collapse All
           </button>
         </div>
@@ -287,45 +274,41 @@ function GenealogyPage() {
 
       <TreeStats tree={tree} />
 
-      <Card className="animate-fade-in-up stagger-2 border-0 shadow-xl bg-white/90 backdrop-blur-sm overflow-hidden">
-        <CardHeader className="pb-3 border-b border-stone-100/80 bg-gradient-to-r from-stone-50/50 to-transparent">
-          <CardTitle className="text-sm flex items-center justify-between">
-            <div className="flex items-center gap-2.5">
-              <div className="w-3 h-3 rounded-full bg-gradient-to-br from-amber-400 to-orange-400 shadow-sm shadow-amber-200" />
-              <span className="text-stone-700">{user.name} <span className="text-stone-400 font-normal">({user.id})</span></span>
+      {/* Tree container */}
+      <div className="mt-5 bg-white/70 backdrop-blur-sm rounded-3xl border border-sky-100 shadow-xl shadow-sky-100/30 overflow-hidden">
+        {error ? (
+          <div className="text-center py-16">
+            <div className="w-16 h-16 rounded-2xl bg-red-50 flex items-center justify-center mx-auto mb-4"><Users className="h-8 w-8 text-red-400" /></div>
+            <p className="text-red-500 font-medium">{error}</p>
+            <button onClick={() => window.location.reload()} className="mt-3 text-sm text-sky-600 hover:underline flex items-center gap-1.5 mx-auto"><RotateCcw className="h-3.5 w-3.5" /> Try again</button>
+          </div>
+        ) : loading ? (
+          <div className="p-8 flex justify-center">
+            <div className="space-y-4 w-full max-w-md">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="flex items-center gap-3 p-4 rounded-2xl bg-sky-50 animate-pulse" style={{ animationDelay: i * 100 + "ms" }}>
+                  <div className="w-12 h-12 rounded-full bg-sky-200" />
+                  <div className="flex-1 space-y-2"><div className="h-3 bg-sky-200 rounded w-24" /><div className="h-4 bg-sky-200 rounded w-36" /></div>
+                </div>
+              ))}
             </div>
-            {tree && <Badge variant="outline" className="text-[10px] border-amber-200 text-amber-600 bg-amber-50">{expanded.size} branches open</Badge>}
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="p-4 sm:p-6">
-          {error ? (
-            <div className="text-center py-12">
-              <div className="w-16 h-16 rounded-2xl bg-red-50 flex items-center justify-center mx-auto mb-4"><Users className="h-8 w-8 text-red-400" /></div>
-              <p className="text-red-500 font-medium">{error}</p>
-              <button onClick={() => window.location.reload()} className="mt-3 text-sm text-amber-600 hover:underline flex items-center gap-1.5 mx-auto"><RotateCcw className="h-3.5 w-3.5" /> Try again</button>
+          </div>
+        ) : !tree || tree.children.length === 0 ? (
+          <div className="text-center py-16">
+            <div className="w-24 h-24 rounded-full bg-gradient-to-br from-sky-100 to-blue-50 flex items-center justify-center mx-auto mb-5 shadow-inner">
+              <Users className="h-12 h-12 text-sky-300" />
             </div>
-          ) : loading ? (
-            <div className="space-y-4">{[1,2,3].map((i) => (
-              <div key={i} className="flex items-center gap-3 p-4 rounded-2xl bg-stone-50 animate-pulse" style={{ animationDelay: i * 100 + "ms" }}>
-                <div className="w-9 h-9 rounded-xl bg-stone-200" /><div className="w-12 h-12 rounded-2xl bg-stone-200" />
-                <div className="flex-1 space-y-2"><div className="h-3 bg-stone-200 rounded w-24" /><div className="h-4 bg-stone-200 rounded w-36" /></div>
-              </div>
-            ))}</div>
-          ) : !tree || tree.children.length === 0 ? (
-            <div className="text-center py-16">
-              <div className="w-24 h-24 rounded-[2rem] bg-gradient-to-br from-stone-100 to-stone-50 flex items-center justify-center mx-auto mb-5 shadow-inner animate-float">
-                <Users className="h-12 w-12 text-stone-300" />
-              </div>
-              <p className="text-stone-600 font-bold text-lg">No referrals yet</p>
-              <p className="text-sm text-stone-400 mt-1 max-w-xs mx-auto">Share your invite link to start growing your tree</p>
+            <p className="text-slate-600 font-bold text-lg">No referrals yet</p>
+            <p className="text-sm text-slate-400 mt-1 max-w-xs mx-auto">Share your invite link to start growing your tree</p>
+          </div>
+        ) : (
+          <div className="overflow-x-auto p-6 sm:p-8">
+            <div className="flex justify-center min-w-max">
+              <OrgCard node={tree} expanded={expanded} onToggle={toggle} />
             </div>
-          ) : (
-            <div className="max-h-[70vh] overflow-y-auto pr-2 scrollbar-thin">
-              <TreeNode node={tree} expanded={expanded} onToggle={toggle} siblingCount={1} siblingIndex={0} />
-            </div>
-          )}
-        </CardContent>
-      </Card>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
