@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { db } from "../db";
 import { users, payouts } from "../db/schema";
-import { eq, and, or, sql } from "drizzle-orm";
+import { eq, and, or, ne, sql } from "drizzle-orm";
 import { createHash, randomBytes } from "crypto";
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
@@ -383,7 +383,7 @@ export const getDirectReferrals = createServerFn({ method: "GET" })
     return await db
       .select()
       .from(users)
-      .where(and(eq(users.parentId, data.parentId), eq(users.role, "user")));
+      .where(and(eq(users.parentId, data.parentId), ne(users.role, "admin")));
   });
 
 export const getDownlineUsers = createServerFn({ method: "GET" })
