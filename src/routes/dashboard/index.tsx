@@ -129,7 +129,7 @@ function DashboardHome() {
       shadowColor: "shadow-teal-500/20",
       bgLight: "bg-teal-50",
       textColor: "text-teal-600",
-      detail: directReferrals.length + " direct, " + (treeInfo?.members ?? 0) + " downline",
+      detail: (treeInfo?.active ?? 0) + " active, " + ((treeInfo?.members ?? 0) - (treeInfo?.active ?? 0)) + " inactive",
       trend: null,
     },
     {
