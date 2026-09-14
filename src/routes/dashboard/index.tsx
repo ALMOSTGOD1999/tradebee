@@ -13,14 +13,15 @@ export const Route = createFileRoute("/dashboard/")({
   component: DashboardHome,
 });
 
-interface TreeInfo { members: number; active: number; invest: number; depth: number; allNodes: { id: string; investment: number }[] }
+interface TreeInfo { members: number; active: number; invest: number; activationBiz: number; depth: number; allNodes: { id: string; investment: number }[] }
 
 function countTree(tree: any): TreeInfo {
-  const info: TreeInfo = { members: 0, active: 0, invest: 0, depth: 0, allNodes: [] };
+  const info: TreeInfo = { members: 0, active: 0, invest: 0, activationBiz: 0, depth: 0, allNodes: [] };
   (function walk(n: any) {
     if (n.depth > 0) {
       info.members++;
       info.allNodes.push({ id: n.id, investment: n.investment });
+      if (n.activationPackage > 0) { info.activationBiz += n.activationPackage; }
     }
     if (n.isActive) { info.active++; }
     if (n.investment > 0) { info.invest += n.investment; }
@@ -62,10 +63,11 @@ function DashboardHome() {
   const totalLevelBonus = levelBonuses.reduce((sum, l) => sum + l.bonus, 0);
   const salaryTier = calculateSalary(user.id, allUsers);
   const totalEarnings = referralBonus + totalLevelBonus + (salaryTier?.monthlySalary || 0);
+  const totalBusiness = (treeInfo?.invest ?? 0) + (treeInfo?.activationBiz ?? 0) + investment;
 
   const stats = [
     {
-      label: "Total Investment",
+      label: "My Investment",
       value: formatCurrency(investment),
       icon: Wallet,
       gradient: "from-amber-400 to-orange-500",
@@ -74,6 +76,17 @@ function DashboardHome() {
       textColor: "text-amber-600",
       detail: tierInfo ? tierInfo.label : "No investment yet",
       trend: investment > 0 ? "+12%" : null,
+    },
+    {
+      label: "Total Business",
+      value: formatCurrency(totalBusiness),
+      icon: TrendingUp,
+      gradient: "from-emerald-400 to-green-500",
+      shadowColor: "shadow-green-500/20",
+      bgLight: "bg-emerald-50",
+      textColor: "text-emerald-600",
+      detail: formatCurrency(treeInfo?.invest ?? 0) + " investment + " + formatCurrency(treeInfo?.activationBiz ?? 0) + " activation",
+      trend: totalBusiness > 0 ? "+" + formatCurrency(totalBusiness) : null,
     },
     {
       label: "Joining Reward Wallet",
