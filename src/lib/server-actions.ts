@@ -948,3 +948,59 @@ export const getActivationStatus = createServerFn({ method: "GET" })
       .where(eq(users.id, data.userId));
     return user[0] || null;
   });
+
+export const getAllPlatformUsers = createServerFn({ method: "GET" })
+  .handler(async () => {
+    const allUsers = await db.select().from(users).where(ne(users.role, "admin"));
+    return allUsers.map((u) => ({
+      id: u.id,
+      name: u.name,
+      parentId: u.parentId,
+      investment: Number(u.investment) || 0,
+      activationPackage: Number(u.activationPackage) || 0,
+      isActive: u.isActive,
+      investmentTier: u.investmentTier,
+    }));
+  });
+
+export const getAdminFullTree = createServerFn({ method: "GET" })
+  .handler(async () => {
+    const allUsers = await db.select().from(users).where(ne(users.role, "admin"));
+
+    function buildNode(userId: string, depth: number): GenealogyNode | null {
+      const user = allUsers.find((u) => u.id === userId);
+      if (!user) return null;
+      const children = allUsers
+        .filter((u) => u.parentId === userId)
+        .map((c) => buildNode(c.id, depth + 1))
+        .filter((n): n is GenealogyNode => n !== null);
+      return {
+        id: user.id,
+        name: user.name,
+        investment: Number(user.investment) || 0,
+        activationPackage: Number(user.activationPackage) || 0,
+        tier: user.investmentTier,
+        depth,
+        isActive: user.isActive,
+        children,
+      };
+    }
+
+    // Find root users (no parent or parent is admin)
+    const roots = allUsers
+      .filter((u) => !u.parentId)
+      .map((u) => buildNode(u.id, 0))
+      .filter((n): n is GenealogyNode => n !== null);
+
+    // Wrap in a virtual root
+    return {
+      id: "ADMIN",
+      name: "Platform Root",
+      investment: 0,
+      activationPackage: 0,
+      tier: null,
+      depth: 0,
+      isActive: true,
+      children: roots,
+    } as GenealogyNode;
+  });

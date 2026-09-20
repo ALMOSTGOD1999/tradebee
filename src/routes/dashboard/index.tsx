@@ -4,7 +4,7 @@ import { useAuth } from "../../lib/auth";
 import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
 import { Badge } from "../../components/ui/badge";
 import { getInvestmentTier, calculateDirectReferralBonus, calculateLevelBonus, calculateSalary, formatCurrency } from "../../lib/store";
-import { getDirectReferrals, getGenealogyTree } from "../../lib/server-actions";
+import { getDirectReferrals, getGenealogyTree, getAllPlatformUsers } from "../../lib/server-actions";
 import type { User } from "../../lib/store";
 import { Button } from "../../components/ui/button";
 import { Users, TrendingUp, Wallet, Award, ArrowUpRight, ChevronRight, Zap, Star, ArrowRight, IndianRupee } from "lucide-react";
@@ -36,19 +36,49 @@ function DashboardHome() {
   const [directReferrals, setDirectReferrals] = useState<User[]>([]);
   const [treeInfo, setTreeInfo] = useState<TreeInfo | null>(null);
   const [allUsers, setAllUsers] = useState<User[]>([]);
+  const [adminStats, setAdminStats] = useState<{ totalUsers: number; totalInvestment: number; totalActivation: number; activeCount: number; inactiveCount: number } | null>(null);
+  const isAdmin = user?.role === "admin";
 
   useEffect(() => {
     if (!user) return;
     const load = async () => {
-      const [direct, tree] = await Promise.all([
-        getDirectReferrals({ data: { parentId: user.id } }),
-        getGenealogyTree({ data: { userId: user.id } }),
-      ]);
-      setDirectReferrals(direct);
-      if (tree) {
-        const info = countTree(tree);
-        setTreeInfo(info);
-        setAllUsers(info.allNodes.map(n => ({ id: n.id, investment: n.investment } as User)));
+      if (isAdmin) {
+        // Admin sees full platform stats
+        const [platformUsers, direct, tree] = await Promise.all([
+          getAllPlatformUsers(),
+          getDirectReferrals({ data: { parentId: user.id } }),
+          getGenealogyTree({ data: { userId: user.id } }),
+        ]);
+        setDirectReferrals(direct);
+        if (tree) {
+          const info = countTree(tree);
+          setTreeInfo(info);
+          setAllUsers(info.allNodes.map(n => ({ id: n.id, investment: n.investment } as User)));
+        }
+        // Platform-wide stats
+        const pUsers = platformUsers as any[];
+        const totalInvestment = pUsers.reduce((sum: number, u: any) => sum + (u.investment || 0), 0);
+        const totalActivation = pUsers.reduce((sum: number, u: any) => sum + (u.activationPackage || 0), 0);
+        const activeCount = pUsers.filter((u: any) => u.isActive).length;
+        setAdminStats({
+          totalUsers: pUsers.length,
+          totalInvestment,
+          totalActivation,
+          activeCount,
+          inactiveCount: pUsers.length - activeCount,
+        });
+      } else {
+        // Regular user sees own data
+        const [direct, tree] = await Promise.all([
+          getDirectReferrals({ data: { parentId: user.id } }),
+          getGenealogyTree({ data: { userId: user.id } }),
+        ]);
+        setDirectReferrals(direct);
+        if (tree) {
+          const info = countTree(tree);
+          setTreeInfo(info);
+          setAllUsers(info.allNodes.map(n => ({ id: n.id, investment: n.investment } as User)));
+        }
       }
     };
     load();
@@ -56,36 +86,49 @@ function DashboardHome() {
 
   if (!user) return null;
 
-  const investment = Number(user.investment) || 0;
+  const investment = isAdmin ? (adminStats?.totalInvestment ?? 0) : (Number(user.investment) || 0);
   const tierInfo = getInvestmentTier(user.investmentTier);
-  const referralBonus = calculateDirectReferralBonus(investment);
+  const referralBonus = calculateDirectReferralBonus(Number(user.investment) || 0);
   const levelBonuses = calculateLevelBonus(user.id, allUsers);
   const totalLevelBonus = levelBonuses.reduce((sum, l) => sum + l.bonus, 0);
   const salaryTier = calculateSalary(user.id, allUsers);
   const totalEarnings = referralBonus + totalLevelBonus + (salaryTier?.monthlySalary || 0);
-  const totalBusiness = (treeInfo?.invest ?? 0) + (treeInfo?.activationBiz ?? 0) + investment;
+  const totalBusiness = isAdmin
+    ? (adminStats?.totalInvestment ?? 0) + (adminStats?.totalActivation ?? 0)
+    : (treeInfo?.invest ?? 0) + (treeInfo?.activationBiz ?? 0) + (Number(user.investment) || 0);
+  const totalMembers = isAdmin
+    ? (adminStats?.totalUsers ?? 0)
+    : (directReferrals.length + (treeInfo?.members ?? 0));
+  const totalActive = isAdmin
+    ? (adminStats?.activeCount ?? 0)
+    : (treeInfo?.active ?? 0);
+  const totalInactive = isAdmin
+    ? (adminStats?.inactiveCount ?? 0)
+    : (totalMembers - totalActive);
 
   const stats = [
-    {
+    ...(isAdmin ? [] : [{
       label: "My Investment",
-      value: formatCurrency(investment),
+      value: formatCurrency(Number(user.investment) || 0),
       icon: Wallet,
       gradient: "from-amber-400 to-orange-500",
       shadowColor: "shadow-amber-500/20",
       bgLight: "bg-amber-50",
       textColor: "text-amber-600",
       detail: tierInfo ? tierInfo.label : "No investment yet",
-      trend: investment > 0 ? "+12%" : null,
-    },
+      trend: null as string | null,
+    }]),
     {
-      label: "Total Business",
+      label: isAdmin ? "Platform Business" : "Total Business",
       value: formatCurrency(totalBusiness),
       icon: TrendingUp,
       gradient: "from-emerald-400 to-green-500",
       shadowColor: "shadow-green-500/20",
       bgLight: "bg-emerald-50",
       textColor: "text-emerald-600",
-      detail: formatCurrency(treeInfo?.invest ?? 0) + " investment + " + formatCurrency(treeInfo?.activationBiz ?? 0) + " activation",
+      detail: isAdmin
+        ? formatCurrency(adminStats?.totalInvestment ?? 0) + " investment + " + formatCurrency(adminStats?.totalActivation ?? 0) + " activation"
+        : formatCurrency(treeInfo?.invest ?? 0) + " investment + " + formatCurrency(treeInfo?.activationBiz ?? 0) + " activation",
       trend: totalBusiness > 0 ? "+" + formatCurrency(totalBusiness) : null,
     },
     {
@@ -99,7 +142,7 @@ function DashboardHome() {
       detail: "Joining bonuses earned",
       trend: null,
     },
-    {
+    ...(isAdmin ? [] : [{
       label: "Direct Referrals",
       value: directReferrals.length.toString(),
       icon: Users,
@@ -108,9 +151,20 @@ function DashboardHome() {
       bgLight: "bg-blue-50",
       textColor: "text-blue-600",
       detail: "Downline: " + (treeInfo?.members ?? 0) + " members",
+      trend: null as string | null,
+    }]),
+    {
+      label: isAdmin ? "Total Users" : "Total Team",
+      value: totalMembers.toString(),
+      icon: Users,
+      gradient: "from-teal-400 to-cyan-500",
+      shadowColor: "shadow-teal-500/20",
+      bgLight: "bg-teal-50",
+      textColor: "text-teal-600",
+      detail: totalActive + " active, " + totalInactive + " inactive",
       trend: null,
     },
-    {
+    ...(!isAdmin ? [{
       label: "Monthly Earnings",
       value: formatCurrency(totalEarnings),
       icon: TrendingUp,
@@ -120,19 +174,7 @@ function DashboardHome() {
       textColor: "text-emerald-600",
       detail: "All sources combined",
       trend: totalEarnings > 0 ? "+" + formatCurrency(totalEarnings) : null,
-    },
-    {
-      label: "Total Team",
-      value: (directReferrals.length + (treeInfo?.members ?? 0)).toString(),
-      icon: Users,
-      gradient: "from-teal-400 to-cyan-500",
-      shadowColor: "shadow-teal-500/20",
-      bgLight: "bg-teal-50",
-      textColor: "text-teal-600",
-      detail: (treeInfo?.active ?? 0) + " active, " + ((treeInfo?.members ?? 0) - (treeInfo?.active ?? 0)) + " inactive",
-      trend: null,
-    },
-    {
+    }, {
       label: "Salary Tier",
       value: salaryTier ? formatCurrency(salaryTier.monthlySalary) : "--",
       icon: Award,
@@ -141,8 +183,8 @@ function DashboardHome() {
       bgLight: "bg-purple-50",
       textColor: "text-purple-600",
       detail: salaryTier ? salaryTier.totalBusiness + " business" : "Build your team",
-      trend: null,
-    },
+      trend: null as string | null,
+    }] : []),
   ];
 
   return (
@@ -150,8 +192,8 @@ function DashboardHome() {
       <div className="animate-fade-in-down">
         <div className="flex items-start justify-between">
           <div>
-            <h2 className="text-2xl lg:text-3xl font-bold text-stone-800">Welcome back, {user.name}!</h2>
-            <p className="text-stone-500 mt-1">Here's what's happening with your account today.</p>
+            <h2 className="text-2xl lg:text-3xl font-bold text-stone-800">{isAdmin ? "Admin Dashboard" : "Welcome back, " + user.name + "!"}</h2>
+            <p className="text-stone-500 mt-1">{isAdmin ? "Full platform overview — all users, all business" : "Here's what's happening with your account today."}</p>
           </div>
           <div className="hidden md:flex items-center gap-2">
             <Badge variant="outline" className="text-xs border-amber-200 text-amber-600 bg-amber-50">
@@ -161,7 +203,7 @@ function DashboardHome() {
         </div>
       </div>
 
-      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+      <div className={`grid gap-5 sm:grid-cols-2 ${isAdmin ? "lg:grid-cols-3" : "lg:grid-cols-3 xl:grid-cols-6"}`}>
         {stats.map((stat, idx) => (
           <Card
             key={stat.label}
