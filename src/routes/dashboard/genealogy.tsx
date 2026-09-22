@@ -200,7 +200,7 @@ function OrgCard({ node, expanded, onToggle }: {
 function TreeStats({ tree }: { tree: TreeNode | null }) {
   if (!tree) return null;
   let members = 0, active = 0, invest = 0, depth = 0;
-  (function walk(n: TreeNode) { if (n.depth > 0) members++; if (n.isActive) active++; if (n.investment > 0) invest += n.investment; if (n.depth > depth) depth = n.depth; n.children.forEach(walk); })(tree);
+  (function walk(n: TreeNode) { if (n.depth > 0) { members++; if (n.isActive) active++; if (n.investment > 0) invest += n.investment; } if (n.depth > depth) depth = n.depth; n.children.forEach(walk); })(tree);
   const s = [
     { l: "Members", v: members, i: Users, c: "text-sky-600", bg: "from-sky-50 to-blue-50", bd: "border-sky-200/60" },
     { l: "Active", v: active, i: TrendingUp, c: "text-emerald-600", bg: "from-emerald-50 to-green-50/30", bd: "border-emerald-200/60" },

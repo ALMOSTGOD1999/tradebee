@@ -21,10 +21,10 @@ function countTree(tree: any): TreeInfo {
     if (n.depth > 0) {
       info.members++;
       info.allNodes.push({ id: n.id, investment: n.investment });
+      if (n.investment > 0) { info.invest += n.investment; }
       if (n.activationPackage > 0) { info.activationBiz += n.activationPackage; }
+      if (n.isActive) { info.active++; }
     }
-    if (n.isActive) { info.active++; }
-    if (n.investment > 0) { info.invest += n.investment; }
     if (n.depth > info.depth) info.depth = n.depth;
     n.children.forEach(walk);
   })(tree);
