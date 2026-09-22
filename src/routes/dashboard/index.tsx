@@ -92,7 +92,7 @@ function DashboardHome() {
   const levelBonuses = calculateLevelBonus(user.id, allUsers);
   const totalLevelBonus = levelBonuses.reduce((sum, l) => sum + l.bonus, 0);
   const salaryTier = calculateSalary(user.id, allUsers);
-  const totalEarnings = referralBonus + totalLevelBonus + (salaryTier?.monthlySalary || 0);
+  const totalEarnings = referralBonus; // Monthly Earnings = Referral Bonus only
   const totalBusiness = isAdmin
     ? (adminStats?.totalInvestment ?? 0) + (adminStats?.totalActivation ?? 0)
     : (treeInfo?.invest ?? 0) + (treeInfo?.activationBiz ?? 0) + (Number(user.investment) || 0);
