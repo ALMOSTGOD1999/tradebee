@@ -103,8 +103,8 @@ export function formatCurrency(amount: number): string {
   }).format(amount);
 }
 
-export function calculateDirectReferralBonus(userInvestment: number): number {
-  return userInvestment * 0.05;
+export function calculateDirectReferralBonus(directReferrals: User[]): number {
+  return directReferrals.reduce((sum, u) => sum + (Number(u.investment) || 0) * 0.05, 0);
 }
 
 export function calculateLevelBonus(

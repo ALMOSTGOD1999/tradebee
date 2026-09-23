@@ -88,7 +88,7 @@ function DashboardHome() {
 
   const investment = isAdmin ? (adminStats?.totalInvestment ?? 0) : (Number(user.investment) || 0);
   const tierInfo = getInvestmentTier(user.investmentTier);
-  const referralBonus = calculateDirectReferralBonus(Number(user.investment) || 0);
+  const referralBonus = calculateDirectReferralBonus(directReferrals);
   const levelBonuses = calculateLevelBonus(user.id, allUsers);
   const totalLevelBonus = levelBonuses.reduce((sum, l) => sum + l.bonus, 0);
   const salaryTier = calculateSalary(user.id, allUsers);
