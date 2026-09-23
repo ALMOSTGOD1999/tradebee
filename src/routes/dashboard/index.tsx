@@ -192,8 +192,8 @@ function DashboardHome() {
       <div className="animate-fade-in-down">
         <div className="flex items-start justify-between">
           <div>
-            <h2 className="text-2xl lg:text-3xl font-bold text-stone-800">{isAdmin ? "Admin Dashboard" : "Welcome back, " + user.name + "!"}</h2>
-            <p className="text-stone-500 mt-1">{isAdmin ? "Full platform overview — all users, all business" : "Here's what's happening with your account today."}</p>
+            <h2 className="text-2xl lg:text-3xl font-bold text-white">{isAdmin ? "Admin Dashboard" : "Welcome back, " + user.name + "!"}</h2>
+            <p className="text-slate-400 mt-1">{isAdmin ? "Full platform overview — all users, all business" : "Here's what's happening with your account today."}</p>
           </div>
           <div className="hidden md:flex items-center gap-2">
             <Badge variant="outline" className="text-xs border-amber-200 text-amber-600 bg-amber-50">
