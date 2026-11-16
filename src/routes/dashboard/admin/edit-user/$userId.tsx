@@ -142,13 +142,13 @@ function AdminEditUserPage() {
   return (
     <div className="space-y-6 max-w-lg mx-auto">
       <div className="animate-fade-in-down">
-        <h2 className="text-2xl lg:text-3xl font-bold text-stone-800 flex items-center gap-3">
+        <h2 className="text-2xl lg:text-3xl font-bold text-white flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-400 to-indigo-400 flex items-center justify-center shadow-lg shadow-blue-200/50">
             <UserCog className="h-5 w-5 text-white" />
           </div>
           Edit User
         </h2>
-        <p className="text-stone-500 mt-1 ml-13">
+        <p className="text-slate-400 mt-1 ml-13">
           Editing <span className="font-mono font-bold text-amber-600">{userId}</span>
         </p>
       </div>

@@ -1,0 +1,597 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Tradebee Income Report — till 30 October 2026</title>
+<style>
+  @page { size: A4; margin: 14mm 12mm; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+    color: #1c1917; font-size: 12px; line-height: 1.45; margin: 0;
+  }
+  header { border-bottom: 3px solid #f59e0b; padding-bottom: 12px; margin-bottom: 18px; }
+  h1 { font-size: 24px; margin: 0 0 4px; letter-spacing: -0.01em; }
+  .sub { color: #57534e; font-size: 12.5px; }
+  .brand { color: #d97706; font-weight: 700; text-transform: uppercase; letter-spacing: .18em; font-size: 11px; }
+  h2 {
+    font-size: 15px; margin: 26px 0 8px; padding-bottom: 4px;
+    border-bottom: 1px solid #e7e5e4; color: #92400e;
+  }
+  h3 { font-size: 13px; margin: 14px 0 6px; }
+  table { width: 100%; border-collapse: collapse; margin: 6px 0 10px; }
+  th {
+    text-align: left; font-size: 10.5px; text-transform: uppercase; letter-spacing: .05em;
+    color: #57534e; background: #fafaf9; padding: 6px 8px; border-bottom: 2px solid #e7e5e4;
+  }
+  td { padding: 5px 8px; border-bottom: 1px solid #f0efec; vertical-align: top; }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  tr.total td { font-weight: 700; background: #fffbeb; border-top: 2px solid #f59e0b; border-bottom: none; }
+  .mono { font-family: Consolas, "Courier New", monospace; font-size: 10.5px; }
+  .dim { color: #8a857e; }
+  .num { font-variant-numeric: tabular-nums; }
+  .cards { display: flex; gap: 10px; margin: 14px 0 4px; }
+  .card {
+    flex: 1; border: 1px solid #e7e5e4; border-radius: 8px; padding: 10px 12px;
+    background: #fafaf9;
+  }
+  .card .label { font-size: 10.5px; text-transform: uppercase; letter-spacing: .06em; color: #78716c; }
+  .card .value { font-size: 19px; font-weight: 700; margin-top: 3px; color: #1c1917; }
+  .card .note { font-size: 10.5px; color: #8a857e; margin-top: 2px; }
+  .card.accent { background: #fffbeb; border-color: #fde68a; }
+  .card.accent .value { color: #b45309; }
+  .badge {
+    display: inline-block; font-size: 9.5px; font-weight: 700; letter-spacing: .05em;
+    text-transform: uppercase; padding: 1px 6px; border-radius: 999px; vertical-align: 1px;
+  }
+  .badge.rec { background: #dcfce7; color: #166534; }
+  .badge.comp { background: #e0e7ff; color: #3730a3; }
+  .badge.nil { background: #f3f4f6; color: #57534e; }
+  .notes { font-size: 11px; color: #57534e; }
+  .notes li { margin-bottom: 4px; }
+  .section-intro { color: #57534e; margin: 2px 0 8px; }
+  footer {
+    margin-top: 28px; padding-top: 8px; border-top: 1px solid #e7e5e4;
+    font-size: 10.5px; color: #8a857e;
+  }
+  .avoid-break { break-inside: avoid; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">Tradebee · Income Report</div>
+  <h1>Every income type — till 30 October 2026</h1>
+  <div class="sub">
+    Reporting period: platform inception (26 Aug 2026) → <strong>30 Oct 2026 (inclusive)</strong>
+    &nbsp;·&nbsp; Generated 16 Nov 2026, 13:23
+    &nbsp;·&nbsp; All amounts in INR (₹)
+  </div>
+</header>
+
+<div class="cards">
+  <div class="card accent">
+    <div class="label">Total income (all types)</div>
+    <div class="value">₹1,36,222</div>
+    <div class="note">recorded + computed</div>
+  </div>
+  <div class="card">
+    <div class="label">Recorded payouts</div>
+    <div class="value">₹1,24,600</div>
+    <div class="note">22 transactions</div>
+  </div>
+  <div class="card">
+    <div class="label">Level bonus (computed)</div>
+    <div class="value">₹11,622</div>
+    <div class="note">23 beneficiaries</div>
+  </div>
+  <div class="card">
+    <div class="label">Salary (computed)</div>
+    <div class="value">₹0</div>
+    <div class="note">no qualifying member</div>
+  </div>
+</div>
+
+<h2>1. Summary — income by type</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Income type</th>
+      <th>Source</th>
+      <th class="num">Records</th>
+      <th class="num">Amount till 30 October 2026</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Direct referral bonus <span class="dim">(5% of referral investment)</span></td>
+      <td><span class="badge rec">Recorded</span></td>
+      <td class="num">20</td>
+      <td class="num">₹1,23,600</td>
+    </tr>
+    <tr>
+      <td>Joining bonus <span class="dim">(5% of activation package)</span></td>
+      <td><span class="badge rec">Recorded</span></td>
+      <td class="num">2</td>
+      <td class="num">₹1,000</td>
+    </tr>
+    <tr>
+      <td>Level bonus <span class="dim">(21-level pool, on downline investments)</span></td>
+      <td><span class="badge comp">Computed</span></td>
+      <td class="num">23 beneficiaries</td>
+      <td class="num">₹11,622</td>
+    </tr>
+    <tr>
+      <td>Fixed salary <span class="dim">(team-business tiers)</span></td>
+      <td><span class="badge nil">Not applicable</span></td>
+      <td class="num">0</td>
+      <td class="num">₹0</td>
+    </tr>
+    <tr>
+      <td>ROI / capital return <span class="dim">(investment plans)</span></td>
+      <td><span class="badge nil">Not credited</span></td>
+      <td class="num">0</td>
+      <td class="num">₹0</td>
+    </tr>
+    <tr class="total">
+      <td>Total</td>
+      <td></td>
+      <td class="num"></td>
+      <td class="num">₹1,36,222</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>2. Direct referral bonus <span class="badge rec">Recorded</span></h2>
+<p class="section-intro">
+  5% credit to the direct upline whenever a referred member's investment is recorded.
+  20 transactions totalling <strong>₹1,23,600</strong>.
+</p>
+
+<h3>Month-wise</h3>
+<table class="avoid-break">
+  <thead><tr><th>Month</th><th class="num">Transactions</th><th class="num">Amount</th></tr></thead>
+  <tbody>
+    <tr>
+      <td>Aug 2026</td>
+      <td class="num">6</td>
+      <td class="num">₹1,07,500</td>
+    </tr><tr>
+      <td>Sep 2026</td>
+      <td class="num">13</td>
+      <td class="num">₹15,600</td>
+    </tr><tr>
+      <td>Oct 2026</td>
+      <td class="num">1</td>
+      <td class="num">₹500</td>
+    </tr>
+    <tr class="total"><td>All months</td><td class="num">20</td><td class="num">₹1,23,600</td></tr>
+  </tbody>
+</table>
+
+<h3>Transaction ledger</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Payout ID</th><th>Date</th><th>Credited to</th><th>Referred member</th><th class="num">Amount</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="mono">PO7f87f34ee2be</td>
+      <td>26 Aug 2026, 11:14</td>
+      <td>Founder <span class="dim mono">TB000002</span></td>
+      <td>IT1 <span class="dim mono">TB179854</span></td>
+      <td class="num">₹5,000</td>
+    </tr><tr>
+      <td class="mono">PO664bb9399373</td>
+      <td>26 Aug 2026, 11:28</td>
+      <td>Founder <span class="dim mono">TB000002</span></td>
+      <td>IT2 <span class="dim mono">TB237282</span></td>
+      <td class="num">₹2,500</td>
+    </tr><tr>
+      <td class="mono">POe4eeab68e6ee</td>
+      <td>26 Aug 2026, 11:36</td>
+      <td>Founder <span class="dim mono">TB000002</span></td>
+      <td>IT4 <span class="dim mono">TB627011</span></td>
+      <td class="num">₹12,500</td>
+    </tr><tr>
+      <td class="mono">POfd6736824d8b</td>
+      <td>26 Aug 2026, 11:39</td>
+      <td>Founder <span class="dim mono">TB000002</span></td>
+      <td>IT5 <span class="dim mono">TB523525</span></td>
+      <td class="num">₹25,000</td>
+    </tr><tr>
+      <td class="mono">PO76b50757332d</td>
+      <td>26 Aug 2026, 11:42</td>
+      <td>Founder <span class="dim mono">TB000002</span></td>
+      <td>IT3 <span class="dim mono">TB712553</span></td>
+      <td class="num">₹7,500</td>
+    </tr><tr>
+      <td class="mono">POf63092ec6afd</td>
+      <td>26 Aug 2026, 11:54</td>
+      <td>Founder <span class="dim mono">TB000002</span></td>
+      <td>IT6 <span class="dim mono">TB562726</span></td>
+      <td class="num">₹55,000</td>
+    </tr><tr>
+      <td class="mono">PO129476534844</td>
+      <td>03 Sept 2026, 12:42</td>
+      <td>Founder <span class="dim mono">TB000002</span></td>
+      <td>IT1 <span class="dim mono">TB179854</span></td>
+      <td class="num">₹500</td>
+    </tr><tr>
+      <td class="mono">PO28a52b76737e</td>
+      <td>03 Sept 2026, 12:42</td>
+      <td>Founder <span class="dim mono">TB000002</span></td>
+      <td>IT1 <span class="dim mono">TB179854</span></td>
+      <td class="num">₹500</td>
+    </tr><tr>
+      <td class="mono">PO75bfe3e719d3</td>
+      <td>03 Sept 2026, 12:42</td>
+      <td>Founder <span class="dim mono">TB000002</span></td>
+      <td>IT2 <span class="dim mono">TB237282</span></td>
+      <td class="num">₹500</td>
+    </tr><tr>
+      <td class="mono">PO480ef160b31c</td>
+      <td>03 Sept 2026, 12:42</td>
+      <td>Founder <span class="dim mono">TB000002</span></td>
+      <td>IT3 <span class="dim mono">TB712553</span></td>
+      <td class="num">₹500</td>
+    </tr><tr>
+      <td class="mono">PO76c6d76a537b</td>
+      <td>03 Sept 2026, 12:42</td>
+      <td>Founder <span class="dim mono">TB000002</span></td>
+      <td>IT4 <span class="dim mono">TB627011</span></td>
+      <td class="num">₹500</td>
+    </tr><tr>
+      <td class="mono">PO98d98e0284ab</td>
+      <td>03 Sept 2026, 12:43</td>
+      <td>Founder <span class="dim mono">TB000002</span></td>
+      <td>IT5 <span class="dim mono">TB523525</span></td>
+      <td class="num">₹500</td>
+    </tr><tr>
+      <td class="mono">PO035e80d2c6de</td>
+      <td>03 Sept 2026, 12:43</td>
+      <td>Founder <span class="dim mono">TB000002</span></td>
+      <td>IT6 <span class="dim mono">TB562726</span></td>
+      <td class="num">₹500</td>
+    </tr><tr>
+      <td class="mono">PO888d45fe89ce</td>
+      <td>11 Sept 2026, 14:03</td>
+      <td>TANU SHRI PATRA  <span class="dim mono">TB791835</span></td>
+      <td>JOHAN MURMU  <span class="dim mono">TB752967</span></td>
+      <td class="num">₹500</td>
+    </tr><tr>
+      <td class="mono">POde984553f7d9</td>
+      <td>22 Sept 2026, 16:31</td>
+      <td>Srilanka <span class="dim mono">TB460339</span></td>
+      <td>DIPANKAR MONDAL  <span class="dim mono">TB237145</span></td>
+      <td class="num">₹500</td>
+    </tr><tr>
+      <td class="mono">PO5174f8a0c171</td>
+      <td>22 Sept 2026, 16:31</td>
+      <td>Srilanka <span class="dim mono">TB460339</span></td>
+      <td>DIPANKAR MONDAL  <span class="dim mono">TB237145</span></td>
+      <td class="num">₹500</td>
+    </tr><tr>
+      <td class="mono">PO5ab4997c9476</td>
+      <td>22 Sept 2026, 16:32</td>
+      <td>DIPANKAR MONDAL  <span class="dim mono">TB113819</span></td>
+      <td>PARTHIB MONDAL <span class="dim mono">TB932824</span></td>
+      <td class="num">₹500</td>
+    </tr><tr>
+      <td class="mono">POc8938237bb2c</td>
+      <td>22 Sept 2026, 16:33</td>
+      <td>PARTHIB MONDAL <span class="dim mono">TB932824</span></td>
+      <td>TUMPA MONDAL  <span class="dim mono">TB256842</span></td>
+      <td class="num">₹5,050</td>
+    </tr><tr>
+      <td class="mono">PO6855a88f2b39</td>
+      <td>22 Sept 2026, 16:33</td>
+      <td>PARTHIB MONDAL <span class="dim mono">TB932824</span></td>
+      <td>TUMPA MONDAL  <span class="dim mono">TB256842</span></td>
+      <td class="num">₹5,050</td>
+    </tr><tr>
+      <td class="mono">PO4649e7d497dc</td>
+      <td>01 Oct 2026, 20:57</td>
+      <td>Biswajit kumar halder <span class="dim mono">TB444694</span></td>
+      <td>ALOK PACHHAL <span class="dim mono">TB934156</span></td>
+      <td class="num">₹500</td>
+    </tr>
+    <tr class="total"><td colspan="4">Referral bonus total</td><td class="num">₹1,23,600</td></tr>
+  </tbody>
+</table>
+
+<h2>3. Joining bonus <span class="badge rec">Recorded</span></h2>
+<p class="section-intro">
+  5% of the activation package credited to the direct upline on activation approval.
+  2 transactions totalling <strong>₹1,000</strong>.
+</p>
+<table class="avoid-break">
+  <thead>
+    <tr>
+      <th>Payout ID</th><th>Date</th><th>Credited to</th><th>New member</th><th class="num">Amount</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="mono">JB1FCHU711V</td>
+      <td>14 Sept 2026, 15:55</td>
+      <td>Abhishek Lal <span class="dim mono">TB934747</span></td>
+      <td>Bidyut kumar paul  <span class="dim mono">TB705785</span></td>
+      <td class="num">₹500</td>
+    </tr><tr>
+      <td class="mono">JB1FCRC8O5S</td>
+      <td>14 Sept 2026, 15:55</td>
+      <td>Chandana Bhattacharya <span class="dim mono">TB140220</span></td>
+      <td>Biswajit kumar halder <span class="dim mono">TB444694</span></td>
+      <td class="num">₹500</td>
+    </tr>
+    <tr class="total"><td colspan="4">Joining bonus total</td><td class="num">₹1,000</td></tr>
+  </tbody>
+</table>
+
+<h2>4. Level bonus <span class="badge comp">Computed</span></h2>
+<p class="section-intro">
+  21-level pool (9.15% combined) calculated on downline investments, using the same
+  logic as the dashboard (30 October 2026 snapshot; all investments and members predate the cutoff).
+  Total <strong>₹11,622</strong> across 23 beneficiaries.
+</p>
+
+<h3>By level</h3>
+<table class="avoid-break">
+  <thead>
+    <tr><th class="num">Level</th><th class="num">Rate</th><th class="num">Beneficiaries</th><th class="num">Bonus</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="num">1</td>
+      <td class="num">2.00%</td>
+      <td class="num">4</td>
+      <td class="num">₹2,620</td>
+    </tr><tr>
+      <td class="num">2</td>
+      <td class="num">1.00%</td>
+      <td class="num">4</td>
+      <td class="num">₹1,310</td>
+    </tr><tr>
+      <td class="num">3</td>
+      <td class="num">1.00%</td>
+      <td class="num">4</td>
+      <td class="num">₹1,310</td>
+    </tr><tr>
+      <td class="num">4</td>
+      <td class="num">1.00%</td>
+      <td class="num">4</td>
+      <td class="num">₹1,310</td>
+    </tr><tr>
+      <td class="num">5</td>
+      <td class="num">0.75%</td>
+      <td class="num">4</td>
+      <td class="num">₹983</td>
+    </tr><tr>
+      <td class="num">6</td>
+      <td class="num">0.50%</td>
+      <td class="num">4</td>
+      <td class="num">₹655</td>
+    </tr><tr>
+      <td class="num">7</td>
+      <td class="num">0.25%</td>
+      <td class="num">3</td>
+      <td class="num">₹303</td>
+    </tr><tr>
+      <td class="num">8</td>
+      <td class="num">0.25%</td>
+      <td class="num">3</td>
+      <td class="num">₹303</td>
+    </tr><tr>
+      <td class="num">9</td>
+      <td class="num">0.25%</td>
+      <td class="num">3</td>
+      <td class="num">₹303</td>
+    </tr><tr>
+      <td class="num">10</td>
+      <td class="num">0.25%</td>
+      <td class="num">3</td>
+      <td class="num">₹303</td>
+    </tr><tr>
+      <td class="num">11</td>
+      <td class="num">0.20%</td>
+      <td class="num">3</td>
+      <td class="num">₹242</td>
+    </tr><tr>
+      <td class="num">12</td>
+      <td class="num">0.20%</td>
+      <td class="num">3</td>
+      <td class="num">₹242</td>
+    </tr><tr>
+      <td class="num">13</td>
+      <td class="num">0.20%</td>
+      <td class="num">3</td>
+      <td class="num">₹242</td>
+    </tr><tr>
+      <td class="num">14</td>
+      <td class="num">0.20%</td>
+      <td class="num">3</td>
+      <td class="num">₹242</td>
+    </tr><tr>
+      <td class="num">15</td>
+      <td class="num">0.20%</td>
+      <td class="num">3</td>
+      <td class="num">₹242</td>
+    </tr><tr>
+      <td class="num">16</td>
+      <td class="num">0.15%</td>
+      <td class="num">3</td>
+      <td class="num">₹182</td>
+    </tr><tr>
+      <td class="num">17</td>
+      <td class="num">0.15%</td>
+      <td class="num">2</td>
+      <td class="num">₹167</td>
+    </tr><tr>
+      <td class="num">18</td>
+      <td class="num">0.15%</td>
+      <td class="num">2</td>
+      <td class="num">₹167</td>
+    </tr><tr>
+      <td class="num">19</td>
+      <td class="num">0.15%</td>
+      <td class="num">2</td>
+      <td class="num">₹167</td>
+    </tr><tr>
+      <td class="num">20</td>
+      <td class="num">0.15%</td>
+      <td class="num">2</td>
+      <td class="num">₹167</td>
+    </tr><tr>
+      <td class="num">21</td>
+      <td class="num">0.15%</td>
+      <td class="num">2</td>
+      <td class="num">₹167</td>
+    </tr>
+    <tr class="total"><td colspan="3">Level bonus total</td><td class="num">₹11,622</td></tr>
+  </tbody>
+</table>
+
+<h3>By beneficiary</h3>
+<table>
+  <thead>
+    <tr><th>Member</th><th class="num">Active levels</th><th class="num">Level bonus</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>PARTHIB MONDAL <span class="dim mono">TB932824</span></td>
+      <td class="num">1</td>
+      <td class="num">₹2,020</td>
+    </tr><tr>
+      <td>DIPANKAR MONDAL  <span class="dim mono">TB113819</span></td>
+      <td class="num">2</td>
+      <td class="num">₹1,210</td>
+    </tr><tr>
+      <td>DIPANKAR MONDAL  <span class="dim mono">TB180864</span></td>
+      <td class="num">2</td>
+      <td class="num">₹1,110</td>
+    </tr><tr>
+      <td>DIPANKAR MONDAL  <span class="dim mono">TB497282</span></td>
+      <td class="num">2</td>
+      <td class="num">₹1,110</td>
+    </tr><tr>
+      <td>DIPANKAR MONDAL  <span class="dim mono">TB526855</span></td>
+      <td class="num">2</td>
+      <td class="num">₹858</td>
+    </tr><tr>
+      <td>DIPANKAR MONDAL  <span class="dim mono">TB816490</span></td>
+      <td class="num">2</td>
+      <td class="num">₹580</td>
+    </tr><tr>
+      <td>Srilanka <span class="dim mono">TB460339</span></td>
+      <td class="num">3</td>
+      <td class="num">₹478</td>
+    </tr><tr>
+      <td>Biswajit kumar halder <span class="dim mono">TB444694</span></td>
+      <td class="num">4</td>
+      <td class="num">₹387</td>
+    </tr><tr>
+      <td>Holand <span class="dim mono">TB581419</span></td>
+      <td class="num">3</td>
+      <td class="num">₹378</td>
+    </tr><tr>
+      <td>Hong kong <span class="dim mono">TB802971</span></td>
+      <td class="num">3</td>
+      <td class="num">₹378</td>
+    </tr><tr>
+      <td>Debprasad Das  <span class="dim mono">TB545671</span></td>
+      <td class="num">3</td>
+      <td class="num">₹327</td>
+    </tr><tr>
+      <td>DIPANKAR MONDAL  <span class="dim mono">TB237145</span></td>
+      <td class="num">2</td>
+      <td class="num">₹303</td>
+    </tr><tr>
+      <td>Paris <span class="dim mono">TB949618</span></td>
+      <td class="num">3</td>
+      <td class="num">₹297</td>
+    </tr><tr>
+      <td>Srikanta Pramanick <span class="dim mono">TB820681</span></td>
+      <td class="num">4</td>
+      <td class="num">₹287</td>
+    </tr><tr>
+      <td>Souvik Pramanick <span class="dim mono">TB484143</span></td>
+      <td class="num">4</td>
+      <td class="num">₹287</td>
+    </tr><tr>
+      <td>Chandana Bhattacharya <span class="dim mono">TB140220</span></td>
+      <td class="num">4</td>
+      <td class="num">₹287</td>
+    </tr><tr>
+      <td>London  <span class="dim mono">TB460415</span></td>
+      <td class="num">3</td>
+      <td class="num">₹272</td>
+    </tr><tr>
+      <td>World  <span class="dim mono">TB303608</span></td>
+      <td class="num">3</td>
+      <td class="num">₹247</td>
+    </tr><tr>
+      <td>India <span class="dim mono">TB805137</span></td>
+      <td class="num">3</td>
+      <td class="num">₹247</td>
+    </tr><tr>
+      <td>Space <span class="dim mono">TB226106</span></td>
+      <td class="num">3</td>
+      <td class="num">₹197</td>
+    </tr><tr>
+      <td>ALOK PACHHAL <span class="dim mono">TB934156</span></td>
+      <td class="num">3</td>
+      <td class="num">₹192</td>
+    </tr><tr>
+      <td>IT6 <span class="dim mono">TB562726</span></td>
+      <td class="num">3</td>
+      <td class="num">₹110</td>
+    </tr><tr>
+      <td>Founder <span class="dim mono">TB000002</span></td>
+      <td class="num">2</td>
+      <td class="num">₹65</td>
+    </tr>
+    <tr class="total"><td colspan="2">Level bonus total</td><td class="num">₹11,622</td></tr>
+  </tbody>
+</table>
+
+<h2>5. Fixed salary <span class="badge nil">Not applicable</span></h2>
+<p class="section-intro">
+  Monthly salary tiers start at ₹5,00,000 total team business.
+  Highest team business as of 30 October 2026: <strong>₹1,31,000</strong>
+  (IT6).
+</p>
+<table class="avoid-break">
+  <thead>
+    <tr><th>Member</th><th class="num">Team business</th><th class="num">Salary</th></tr>
+  </thead>
+  <tbody><tr><td colspan="3" class="dim">No member has reached the minimum team business of ₹5,00,000. Salary income till 30 October 2026: <strong>₹0</strong>.</td></tr></tbody>
+</table>
+
+<h2>6. ROI / capital return <span class="badge nil">Not credited</span></h2>
+<p class="section-intro">
+  Investment plans promise 5% capital return + 5–8% monthly ROI
+  (200%–260% total returns), but no ROI credit entries exist in the
+  payout ledger till 30 October 2026. Recorded: <strong>₹0</strong>.
+</p>
+
+<h2>Notes &amp; method</h2>
+<ul class="notes">
+  <li><strong>Recorded</strong> figures come from the <span class="mono">payouts</span> ledger (all entries dated ≤ 30 Oct 2026; no entries exist after the cutoff, so the cutoff excludes nothing).</li>
+  <li><strong>Computed</strong> figures are derived with the application's own rules
+      (<span class="mono">src/lib/store.ts</span>: <span class="mono">calculateLevelBonus</span>,
+      <span class="mono">calculateSalary</span>) on the member tree as of the cutoff.</li>
+  <li>Level bonus sums each ancestor's entitled percentage on every downline investment — the same way the dashboard presents it; it is not yet posted to the payout ledger.</li>
+  <li>Joining Reward Wallet balances (₹1,000) mirror the joining-bonus payouts and are not counted twice.</li>
+  <li>Direct referral bonuses of ₹1,23,600 + joining bonuses of ₹1,000 = <strong>₹1,24,600</strong> have actually been credited to member ledgers/balances.</li>
+</ul>
+
+<footer>
+  Tradebee income report · period inception → 30 October 2026 · generated from live database snapshot ·
+  questions: admin@tradebee
+</footer>
+
+</body>
+</html>

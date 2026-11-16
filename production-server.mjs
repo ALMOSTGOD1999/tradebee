@@ -9,6 +9,7 @@ const MIME = {
   ".json": "application/json",
   ".png": "image/png",
   ".jpg": "image/jpeg",
+  ".pdf": "application/pdf",
   ".ico": "image/x-icon",
   ".svg": "image/svg+xml",
   ".woff": "font/woff",

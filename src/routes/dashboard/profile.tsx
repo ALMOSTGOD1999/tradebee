@@ -126,8 +126,8 @@ function ProfilePage() {
   return (
     <div className="space-y-6 max-w-2xl mx-auto">
       <div className="animate-fade-in-down">
-        <h2 className="text-2xl lg:text-3xl font-bold text-stone-800">My Profile</h2>
-        <p className="text-stone-500 mt-1">Your account details</p>
+        <h2 className="text-2xl lg:text-3xl font-bold text-white">My Profile</h2>
+        <p className="text-slate-400 mt-1">Your account details</p>
       </div>
 
       <Card className="animate-fade-in-up stagger-1 border-0 shadow-lg bg-white overflow-hidden">

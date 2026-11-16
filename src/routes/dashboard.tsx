@@ -18,6 +18,7 @@ import {
   UserPlus,
   Layers,
   Zap,
+  FileText,
 } from "lucide-react";
 import { cn } from "../lib/utils";
 
@@ -41,6 +42,7 @@ const adminNavItems = [
   { to: "/dashboard/admin/create-user" as const, label: "Create User", icon: Shield },
   { to: "/dashboard/admin/all-users" as const, label: "All Users", icon: Users },
   { to: "/dashboard/admin/activation-requests" as const, label: "Activation Requests", icon: Zap },
+  { to: "/dashboard/admin/income-report" as const, label: "Income Report", icon: FileText },
 ];
 
 function DashboardLayout() {

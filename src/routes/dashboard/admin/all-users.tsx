@@ -53,13 +53,13 @@ function AdminAllUsersPage() {
   return (
     <div className="space-y-6">
       <div className="animate-fade-in-down">
-        <h2 className="text-2xl lg:text-3xl font-bold">All Users</h2>
-        <p className="text-muted-foreground mt-1">{users.length} total users in the system</p>
+        <h2 className="text-2xl lg:text-3xl font-bold text-white">All Users</h2>
+        <p className="text-slate-400 mt-1">{users.length} total users in the system</p>
       </div>
 
       <div className="flex items-center gap-2 animate-fade-in-up stagger-1">
-        <Search className="h-4 w-4 text-muted-foreground" />
-        <Input placeholder="Search by name, ID, or email..." value={search} onChange={(e) => setSearch(e.target.value)} className="max-w-sm h-10" />
+        <Search className="h-4 w-4 text-slate-400" />
+        <Input placeholder="Search by name, ID, or email..." value={search} onChange={(e) => setSearch(e.target.value)} className="max-w-sm h-10 bg-white/5 border-slate-600 text-white placeholder:text-slate-500 focus-visible:border-amber-400" />
       </div>
 
       <div className="space-y-3">

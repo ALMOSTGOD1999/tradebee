@@ -222,13 +222,13 @@ function LevelsPage() {
 
       {/* Header */}
       <div className="animate-fade-in-down">
-        <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-stone-800 flex items-center gap-2.5 sm:gap-3">
+        <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white flex items-center gap-2.5 sm:gap-3">
           <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-amber-400 to-orange-400 flex items-center justify-center shadow-lg shadow-amber-200/50">
             <Layers className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
           </div>
           Level Bonus
         </h2>
-        <p className="text-stone-500 mt-1 ml-[46px] sm:ml-[52px] text-sm">
+        <p className="text-slate-400 mt-1 ml-[46px] sm:ml-[52px] text-sm">
           Unlock higher levels with direct referrals
         </p>
       </div>

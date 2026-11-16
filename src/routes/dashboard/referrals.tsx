@@ -43,8 +43,8 @@ function ReferralsPage() {
   return (
     <div className="space-y-6">
       <div className="animate-fade-in-down">
-        <h2 className="text-2xl lg:text-3xl font-bold">Referral Program</h2>
-        <p className="text-muted-foreground mt-1">Share your link and earn 5% direct referral bonus</p>
+        <h2 className="text-2xl lg:text-3xl font-bold text-white">Referral Program</h2>
+        <p className="text-slate-400 mt-1">Share your link and earn 5% direct referral bonus</p>
       </div>
 
       <Card className="animate-fade-in-up stagger-1 border-0 shadow-md bg-gradient-to-br from-amber-500 to-orange-500 text-white">

@@ -28,6 +28,7 @@ import { Route as DashboardTeamRouteImport } from './routes/dashboard/team'
 import { Route as DashboardAdminActivationRequestsRouteImport } from './routes/dashboard/admin/activation-requests'
 import { Route as DashboardAdminAllUsersRouteImport } from './routes/dashboard/admin/all-users'
 import { Route as DashboardAdminCreateUserRouteImport } from './routes/dashboard/admin/create-user'
+import { Route as DashboardAdminIncomeReportRouteImport } from './routes/dashboard/admin/income-report'
 import { Route as DashboardAdminEditUserUserIdRouteImport } from './routes/dashboard/admin/edit-user/$userId'
 
 const IndexRoute = IndexRouteImport.update({
@@ -127,6 +128,12 @@ const DashboardAdminCreateUserRoute =
     path: '/admin/create-user',
     getParentRoute: () => DashboardRoute,
   } as any)
+const DashboardAdminIncomeReportRoute =
+  DashboardAdminIncomeReportRouteImport.update({
+    id: '/admin/income-report',
+    path: '/admin/income-report',
+    getParentRoute: () => DashboardRoute,
+  } as any)
 const DashboardAdminEditUserUserIdRoute =
   DashboardAdminEditUserUserIdRouteImport.update({
     id: '/admin/edit-user/$userId',
@@ -154,6 +161,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/admin/activation-requests': typeof DashboardAdminActivationRequestsRoute
   '/dashboard/admin/all-users': typeof DashboardAdminAllUsersRoute
   '/dashboard/admin/create-user': typeof DashboardAdminCreateUserRoute
+  '/dashboard/admin/income-report': typeof DashboardAdminIncomeReportRoute
   '/dashboard/admin/edit-user/$userId': typeof DashboardAdminEditUserUserIdRoute
 }
 export interface FileRoutesByTo {
@@ -175,6 +183,7 @@ export interface FileRoutesByTo {
   '/dashboard/admin/activation-requests': typeof DashboardAdminActivationRequestsRoute
   '/dashboard/admin/all-users': typeof DashboardAdminAllUsersRoute
   '/dashboard/admin/create-user': typeof DashboardAdminCreateUserRoute
+  '/dashboard/admin/income-report': typeof DashboardAdminIncomeReportRoute
   '/dashboard/admin/edit-user/$userId': typeof DashboardAdminEditUserUserIdRoute
 }
 export interface FileRoutesById {
@@ -198,6 +207,7 @@ export interface FileRoutesById {
   '/dashboard/admin/activation-requests': typeof DashboardAdminActivationRequestsRoute
   '/dashboard/admin/all-users': typeof DashboardAdminAllUsersRoute
   '/dashboard/admin/create-user': typeof DashboardAdminCreateUserRoute
+  '/dashboard/admin/income-report': typeof DashboardAdminIncomeReportRoute
   '/dashboard/admin/edit-user/$userId': typeof DashboardAdminEditUserUserIdRoute
 }
 export interface FileRouteTypes {
@@ -222,6 +232,7 @@ export interface FileRouteTypes {
     | '/dashboard/admin/activation-requests'
     | '/dashboard/admin/all-users'
     | '/dashboard/admin/create-user'
+    | '/dashboard/admin/income-report'
     | '/dashboard/admin/edit-user/$userId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -243,6 +254,7 @@ export interface FileRouteTypes {
     | '/dashboard/admin/activation-requests'
     | '/dashboard/admin/all-users'
     | '/dashboard/admin/create-user'
+    | '/dashboard/admin/income-report'
     | '/dashboard/admin/edit-user/$userId'
   id:
     | '__root__'
@@ -265,6 +277,7 @@ export interface FileRouteTypes {
     | '/dashboard/admin/activation-requests'
     | '/dashboard/admin/all-users'
     | '/dashboard/admin/create-user'
+    | '/dashboard/admin/income-report'
     | '/dashboard/admin/edit-user/$userId'
   fileRoutesById: FileRoutesById
 }
@@ -413,6 +426,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardAdminCreateUserRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/admin/income-report': {
+      id: '/dashboard/admin/income-report'
+      path: '/admin/income-report'
+      fullPath: '/dashboard/admin/income-report'
+      preLoaderRoute: typeof DashboardAdminIncomeReportRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/dashboard/admin/edit-user/$userId': {
       id: '/dashboard/admin/edit-user/$userId'
       path: '/admin/edit-user/$userId'
@@ -436,6 +456,7 @@ interface DashboardRouteChildren {
   DashboardAdminActivationRequestsRoute: typeof DashboardAdminActivationRequestsRoute
   DashboardAdminAllUsersRoute: typeof DashboardAdminAllUsersRoute
   DashboardAdminCreateUserRoute: typeof DashboardAdminCreateUserRoute
+  DashboardAdminIncomeReportRoute: typeof DashboardAdminIncomeReportRoute
   DashboardAdminEditUserUserIdRoute: typeof DashboardAdminEditUserUserIdRoute
 }
 
@@ -452,6 +473,7 @@ const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardAdminActivationRequestsRoute: DashboardAdminActivationRequestsRoute,
   DashboardAdminAllUsersRoute: DashboardAdminAllUsersRoute,
   DashboardAdminCreateUserRoute: DashboardAdminCreateUserRoute,
+  DashboardAdminIncomeReportRoute: DashboardAdminIncomeReportRoute,
   DashboardAdminEditUserUserIdRoute: DashboardAdminEditUserUserIdRoute,
 }
 

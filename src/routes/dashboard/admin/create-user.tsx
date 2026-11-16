@@ -44,8 +44,8 @@ function AdminCreateUserPage() {
   return (
     <div className="space-y-6 max-w-lg mx-auto">
       <div className="animate-fade-in-down">
-        <h2 className="text-2xl lg:text-3xl font-bold">Create New User</h2>
-        <p className="text-muted-foreground mt-1">Admin can create users under any parent in the genealogy</p>
+        <h2 className="text-2xl lg:text-3xl font-bold text-white">Create New User</h2>
+        <p className="text-slate-400 mt-1">Admin can create users under any parent in the genealogy</p>
       </div>
 
       <Card className="animate-fade-in-up stagger-1 border-0 shadow-md bg-white/80 backdrop-blur-sm">

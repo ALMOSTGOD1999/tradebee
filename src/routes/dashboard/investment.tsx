@@ -42,8 +42,8 @@ function InvestmentPage() {
   return (
     <div className="space-y-6">
       <div className="animate-fade-in-down">
-        <h2 className="text-2xl lg:text-3xl font-bold">Investment Plans</h2>
-        <p className="text-muted-foreground mt-1">Choose an investment tier to start earning returns</p>
+        <h2 className="text-2xl lg:text-3xl font-bold text-white">Investment Plans</h2>
+        <p className="text-slate-400 mt-1">Choose an investment tier to start earning returns</p>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">

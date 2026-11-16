@@ -76,13 +76,13 @@ function AddUserPage() {
   return (
     <div className="space-y-6 max-w-lg mx-auto">
       <div className="animate-fade-in-down">
-        <h2 className="text-2xl lg:text-3xl font-bold text-stone-800 flex items-center gap-3">
+        <h2 className="text-2xl lg:text-3xl font-bold text-white flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-orange-400 flex items-center justify-center shadow-lg shadow-amber-200/50">
             <UserPlus className="h-5 w-5 text-white" />
           </div>
           Add New User
         </h2>
-        <p className="text-stone-500 mt-1 ml-13">Create a new member under any user in your network</p>
+        <p className="text-slate-400 mt-1 ml-13">Create a new member under any user in your network</p>
       </div>
 
       {/* Success Card with Invite Link */}
